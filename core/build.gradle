@@ -1,0 +1,49 @@
+plugins {
+    id 'java-library'
+    id "com.jfrog.bintray" version "1.8.0"
+}
+
+// common.gradle已存在该task
+//task sourcesJar(type: Jar, dependsOn: classes) {
+//    classifier = 'sources'
+//    from sourceSets.main.java.srcDirs
+//}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+// ./gradlew build bintrayUpload -PBINTRAY_API_KEY=myKey  //or 设定环境变量: export BINTRAY_API_KEY=myKey
+// gradle.properties: BINTRAY_USER=wangxiaodong
+// compile 'com.openle.module:core:1.0.0'
+bintray {
+    user = project.hasProperty('BINTRAY_USER') ? project.property('BINTRAY_USER') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('BINTRAY_API_KEY') ? project.property('BINTRAY_API_KEY') : System.getenv('BINTRAY_API_KEY')
+    println key
+    configurations = ['archives']
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = project.name
+        userOrg = user
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/iwangxiaodong/open-java.git'
+        version {
+            name = project.version.toString()
+            desc = project.name
+        }
+    }
+}
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = ''
+}
+
+dependencies {
+}
