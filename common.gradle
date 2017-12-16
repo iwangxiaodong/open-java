@@ -58,7 +58,6 @@ tasks.withType(Javadoc) {
     excludes = ['module-info.java','**/xxx/**']
     //failOnError = false
     //options.addStringOption('Xdoclint:none', '-quiet')
-
 }
 
 configurations {

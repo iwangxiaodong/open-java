@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id "com.jfrog.bintray" version "1.8.0"
+//    id 'signing'
 }
 
 // common.gradle已存在该task
@@ -18,6 +19,10 @@ artifacts {
     archives javadocJar
     archives sourcesJar
 }
+
+//signing {
+//    sign configurations.archives
+//}
 
 // ./gradlew build bintrayUpload -PBINTRAY_API_KEY=myKey  //or 设定环境变量: export BINTRAY_API_KEY=myKey
 // gradle.properties: BINTRAY_USER=wangxiaodong
