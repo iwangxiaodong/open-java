@@ -54,7 +54,7 @@ task createFolders(description: 'Creates the source folders if they do not exist
 // 兼容中文注释和排除module-info.java
 tasks.withType(Javadoc) {
     options.addStringOption('encoding', 'UTF-8')
-    title =title+" (开源项目)"
+    title =title+" - Open Source"
     excludes = ['module-info.java','**/xxx/**']
     //failOnError = false
     //options.addStringOption('Xdoclint:none', '-quiet')
@@ -77,7 +77,7 @@ uploadArchives {
             // Win10重启后环境变量方有效 echo %WEBDAV_PASSWORD%
             ext.pwd = project.hasProperty('WEBDAV_PASSWORD') ? project.property('WEBDAV_PASSWORD') : System.getenv('WEBDAV_PASSWORD')
             println ext.pwd
-            repository(url: "dav:http://all.openle.com:58888/repository/") {
+            repository(url: "dav:http://all.openle.com:30580/repository/") {
                 authentication(userName: "webdav", password: ext.pwd)
             }
         }
