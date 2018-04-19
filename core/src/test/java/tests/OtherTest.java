@@ -1,15 +1,16 @@
 package tests;
 
-import com.openle.module.core.lambda.LambdaFactory;
+import com.openle.module.core.lambda.*;
 import java.util.function.Function;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 public class OtherTest {
 
     @Test
     public void testLambdaGetter() {
         Function f = LambdaFactory.newSerializedMethodReferences("fieldName");
-        System.out.println(f);
-        //assertEquals("fieldName", new Utils().getSelectName(LambdaFactory.class, f));
+        String s = LambdaFactory.getMethodReferencesName(f);
+        //System.out.println(s);
+        Assertions.assertEquals(s, "fieldName");
     }
 }

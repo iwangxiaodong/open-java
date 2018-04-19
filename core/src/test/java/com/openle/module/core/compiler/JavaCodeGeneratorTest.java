@@ -2,14 +2,8 @@ package com.openle.module.core.compiler;
 
 import java.util.function.Supplier;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
-/**
- *
- * @author xiaodong
- */
 public class JavaCodeGeneratorTest {
 
     @Test
@@ -24,6 +18,6 @@ public class JavaCodeGeneratorTest {
                     });
         });
         Supplier supplier = compiled.newInstance();
-        assertThat(supplier.get(), is("Hello"));
+        Assertions.assertEquals(supplier.get(), "Hello");
     }
 }
