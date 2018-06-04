@@ -1,4 +1,4 @@
-package com.openle.module.core.compiler;
+package com.openle.all.core.compiler;
 
 import java.io.PrintWriter;
 import java.util.StringJoiner;

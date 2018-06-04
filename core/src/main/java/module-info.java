@@ -1,6 +1,8 @@
-module com.openle.module.core {
+module com.openle.all.core {
     requires java.logging;
     requires jdk.compiler;
+
+    exports com.openle.all.core.specification;
 
     exports com.openle.module.core;
     exports com.openle.module.core.converter;

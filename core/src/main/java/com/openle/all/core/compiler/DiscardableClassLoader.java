@@ -1,4 +1,4 @@
-package com.openle.module.core.compiler;
+package com.openle.all.core.compiler;
 
 public class DiscardableClassLoader {
 
