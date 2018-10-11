@@ -17,6 +17,14 @@ junitPlatform {
     //reportsDir file('build/test-results/test')
 }
 
+jar {     
+    // 解决MethodHandle.invoke and MethodHandle.invokeExact are only supported starting with Android O (--min-api 26)
+    // 也可以在android配置中通过Proguard删除未使用的代码
+    //exclude('com/openle/module/core/lambda/LambdaFactory**')
+    
+    //exclude('my/package/excluded/**')
+}
+
 // common.gradle已存在该task
 //task sourcesJar(type: Jar, dependsOn: classes) {
 //    classifier = 'sources'

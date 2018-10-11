@@ -1,5 +1,6 @@
 package com.openle.module.core.network;
 
+import com.openle.module.core.OS;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -67,12 +68,17 @@ public class NetCommon {
     //  windows Output：DESKTOP-6AFR096/192.168.1.106    //  Debian Output： debian/65.49.201.245
     public static NetworkInterface getEthernetNetworkInterface() {
         NetworkInterface ni = null;
+
         try {
             ni = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
+            if (ni.isLoopback() && !OS.isWindows()) {
+                System.out.println("NetworkInterface.getByName(eth0)");
+                // 临时写死，后续考虑systemd网卡名ens3等
+                ni = NetworkInterface.getByName("eth0");
+            }
         } catch (UnknownHostException | SocketException ex) {
             Logger.getLogger(NetCommon.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //System.out.println(ni.getName());
         return ni;
     }
 
@@ -94,13 +100,27 @@ public class NetCommon {
         if (ni != null) {
             // 只关心IPv4（Inet4Address）地址，后续再考虑IPv6
             List<InetAddress> ipList = Collections.list(ni.getInetAddresses()).stream()
-                    .filter(ia -> !ia.isLoopbackAddress() && ia instanceof Inet4Address)
+                    .filter(ia -> !ia.isLoopbackAddress() && !ia.isLinkLocalAddress() && ia instanceof Inet4Address)
                     .collect(Collectors.toList());
             if (ipList.size() > 0) {
                 return ipList.get(0).getHostAddress();
             }
         }
         return ip;
+    }
+
+    public static String getHostAddress() {
+
+        // 只关心IPv4（Inet4Address）地址，后续再考虑IPv6
+        List<NetworkInterface> ipList = NetCommon.getAllNetworkInterfaces().stream()
+                .filter(ni
+                        -> getHostAddress(ni) != null
+                ).collect(Collectors.toList());
+        if (ipList.size() > 0) {
+            return getHostAddress(ipList.get(0));
+        }
+
+        return null;
     }
 
     public static String macBytesToString(byte[] mac) {

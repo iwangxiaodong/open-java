@@ -2,9 +2,11 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 String mavenGroupId = 'com.openle.module'
-String mavenVersion = '1.0.3-b2'
+String mavenVersion = '1.0.4-b1'   //  '1.0.3-b10'
 
-sourceCompatibility = JavaVersion.VERSION_1_9
+// android编译器只支持到jdk8
+//sourceCompatibility = JavaVersion.VERSION_1_9
+sourceCompatibility = JavaVersion.VERSION_1_8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 repositories {
