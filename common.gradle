@@ -65,11 +65,11 @@ tasks.withType(Javadoc) {
 configurations {
     deployerJars
 }
+
 dependencies {
-    // v3.0.0版本似乎上传不了！
-    //deployerJars group: 'org.apache.maven.wagon', name: 'wagon-webdav-jackrabbit', version: '2.12'
     deployerJars group: 'org.apache.maven.wagon', name: 'wagon-webdav-jackrabbit', version: '3.0.0'
 }
+
 apply plugin: 'maven'
 uploadArchives {
     repositories {
@@ -80,7 +80,7 @@ uploadArchives {
             // Win10重启后环境变量方有效 echo %WEBDAV_PASSWORD%
             ext.pwd = project.hasProperty('WEBDAV_PASSWORD') ? project.property('WEBDAV_PASSWORD') : System.getenv('WEBDAV_PASSWORD')
             //println ext.pwd
-            repository(url: "dav:http://all.openle.com:30580/repository/") {
+            repository(url: "dav:https://maven.oenle.com/repository/") {
                 authentication(userName: "webdav", password: ext.pwd)
             }
         }

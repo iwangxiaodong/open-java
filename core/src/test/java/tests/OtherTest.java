@@ -47,6 +47,7 @@ public class OtherTest {
     }
 
     @Test
+    @Disabled
     public void testLambdaGetter() {
         Function f = LambdaFactory.newSerializedMethodReferences("fieldName");
         String s = LambdaFactory.getMethodReferencesName(f);
