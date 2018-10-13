@@ -28,8 +28,10 @@ public class OtherTest {
 
         NetworkInterface ni = null;
         ni = NetCommon.getEthernetNetworkInterface();
-        System.out.println(ni.getName());
-        System.out.println(NetCommon.getHostAddress(ni));
+        if (ni != null) {
+            System.out.println(ni.getName());
+            System.out.println(NetCommon.getHostAddress(ni));
+        }
 
         //        try {
         //
