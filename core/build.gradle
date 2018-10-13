@@ -27,6 +27,12 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+javadoc {
+    //  For <tt>
+    exclude '**/IndentedPrintWriter.java'
+    exclude '**/ParameterParser.java'
+}
+
 artifacts {
     archives javadocJar
     archives sourcesJar
