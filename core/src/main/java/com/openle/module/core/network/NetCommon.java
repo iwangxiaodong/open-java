@@ -71,7 +71,7 @@ public class NetCommon {
 
         try {
             ni = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
-            if (ni.isLoopback() && !OS.isWindows()) {
+            if (ni != null && ni.isLoopback() && !OS.isWindows()) {
                 System.out.println("NetworkInterface.getByName(eth0)");
                 // 临时写死，后续考虑systemd网卡名ens3等
                 ni = NetworkInterface.getByName("eth0");

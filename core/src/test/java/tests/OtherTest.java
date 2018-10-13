@@ -1,6 +1,6 @@
 package tests;
 
-import com.openle.module.core.lambda.*;
+import com.openle.our.core.lambda.LambdaFactory;
 import com.openle.module.core.network.NetCommon;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -47,7 +47,7 @@ public class OtherTest {
     }
 
     @Test
-    @Disabled
+    //@Disabled
     public void testLambdaGetter() {
         Function f = LambdaFactory.newSerializedMethodReferences("fieldName");
         String s = LambdaFactory.getMethodReferencesName(f);

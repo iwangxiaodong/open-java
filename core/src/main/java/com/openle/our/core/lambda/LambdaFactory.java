@@ -1,4 +1,4 @@
-package com.openle.module.core.lambda;
+package com.openle.our.core.lambda;
 
 import com.openle.module.core.converter.HexConverter;
 import java.io.Serializable;
@@ -135,11 +135,14 @@ public class LambdaFactory {
         后续考虑以下方式是否直接可用：
         LambdaForm lform = preparedLambdaForm(member);
         return new DirectMethodHandle(mtype, lform, member);
+        
+        jdk11起改为了4个参数
          */
         Class directMethodHandleClass = Class.forName("java.lang.invoke.DirectMethodHandle");
-        m = directMethodHandleClass.getDeclaredMethod("make", byte.class, Class.class, memberNameClass);
+        //m = directMethodHandleClass.getDeclaredMethod("make", byte.class, Class.class, memberNameClass);
+        m = directMethodHandleClass.getDeclaredMethod("make", byte.class, Class.class, memberNameClass, Class.class);
         m.setAccessible(true);
-        MethodHandle target = (MethodHandle) m.invoke(null, refKind, c, memberName);
+        MethodHandle target = (MethodHandle) m.invoke(null, refKind, c, memberName, null);
         m.setAccessible(false);
         return target;
     }
