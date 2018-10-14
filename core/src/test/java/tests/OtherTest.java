@@ -1,7 +1,7 @@
 package tests;
 
 import com.openle.our.core.lambda.LambdaFactory;
-import com.openle.module.core.network.NetCommon;
+import com.openle.our.core.network.NetCommon;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;

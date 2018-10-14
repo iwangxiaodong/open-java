@@ -1,6 +1,6 @@
 package com.openle.our.core.lambda;
 
-import com.openle.module.core.converter.HexConverter;
+import com.openle.our.core.converter.HexConverter;
 import java.io.Serializable;
 import java.lang.invoke.CallSite;
 import java.lang.invoke.LambdaMetafactory;
@@ -110,6 +110,7 @@ public class LambdaFactory {
     private static MethodHandle getMethodHandle(Class<?> c, String methodName, MethodType getter) throws ReflectiveOperationException {
         final byte REF_invokeVirtual = 5, REF_invokeInterface = 9;
         byte refKind = (c.isInterface() ? REF_invokeInterface : REF_invokeVirtual);
+        
         Class memberNameClass = Class.forName("java.lang.invoke.MemberName");
         Constructor con = memberNameClass.getConstructor(Class.class, String.class, MethodType.class, byte.class);
         con.setAccessible(true);
@@ -124,25 +125,46 @@ public class LambdaFactory {
         Method m = memberNameClass.getDeclaredMethod("flagsMods", int.class, int.class, byte.class);
         m.setAccessible(true);
         int flags = (int) m.invoke(memberName, 0x00010000, con.getModifiers(), REF_invokeVirtual);
-        //System.out.println(flags);
         m.setAccessible(false);
         //
         field = memberNameClass.getDeclaredField("flags");
         field.setAccessible(true);
         field.set(memberName, flags);
         field.setAccessible(false);
+
+        //  jdk11起改为了4个参数
+        Class directMethodHandleClass = Class.forName("java.lang.invoke.DirectMethodHandle");
+        MethodHandle target = null;
+        //  为兼容jdk9，暂用过时方法major()取代jdk10的feature()
+        if (Runtime.version().major() < 11) {
+            m = directMethodHandleClass.getDeclaredMethod("make", byte.class, Class.class, memberNameClass);
+            m.setAccessible(true);
+            target = (MethodHandle) m.invoke(null, refKind, c, memberName);
+        } else {
+            m = directMethodHandleClass.getDeclaredMethod("make", byte.class, Class.class, memberNameClass, Class.class);
+            m.setAccessible(true);
+            target = (MethodHandle) m.invoke(null, refKind, c, memberName, null);
+        }
+
         /*
         后续考虑以下方式是否直接可用：
-        LambdaForm lform = preparedLambdaForm(member);
-        return new DirectMethodHandle(mtype, lform, member);
-        
-        jdk11起改为了4个参数
+            LambdaForm lform = preparedLambdaForm(member);
+            return new DirectMethodHandle(mtype, lform, member);
          */
-        Class directMethodHandleClass = Class.forName("java.lang.invoke.DirectMethodHandle");
-        //m = directMethodHandleClass.getDeclaredMethod("make", byte.class, Class.class, memberNameClass);
-        m = directMethodHandleClass.getDeclaredMethod("make", byte.class, Class.class, memberNameClass, Class.class);
-        m.setAccessible(true);
-        MethodHandle target = (MethodHandle) m.invoke(null, refKind, c, memberName, null);
+//        m = directMethodHandleClass.getDeclaredMethod("preparedLambdaForm", memberNameClass);
+//        m.setAccessible(true);
+//        Object lambdaFormObj = m.invoke(null, memberName);
+//
+//        Method m1 = memberNameClass.getDeclaredMethod("getMethodOrFieldType");
+//        m1.setAccessible(true);
+//        MethodType mt = (MethodType) m1.invoke(memberName);
+//        m1.setAccessible(false);
+//
+//        Class lambdaFormClass = Class.forName("java.lang.invoke.LambdaForm");
+//        Constructor con1 = directMethodHandleClass.getConstructor(Class.class, MethodType.class, lambdaFormClass, memberNameClass);
+//        con1.setAccessible(true);
+//        target = (MethodHandle) con1.newInstance(c, mt, lambdaFormObj, memberName);
+//        con1.setAccessible(false);
         m.setAccessible(false);
         return target;
     }
