@@ -13,6 +13,15 @@ import org.junit.jupiter.api.*;
 public class OtherTest {
 
     @Test
+    //@Disabled
+    public void testLambdaGetter() {
+        Function f = LambdaFactory.newSerializedMethodReferences("fieldName");
+        String s = LambdaFactory.getMethodReferencesName(f);
+        System.out.println(s);
+        Assertions.assertEquals(s, "fieldName");
+    }
+
+    @Test
     public void testNetCommon() throws SocketException, UnknownHostException {
         NetCommon.getNetworkInterfacesWithMAC().forEach(i -> {
             try {
@@ -26,8 +35,7 @@ public class OtherTest {
         });
         System.out.println("testNetCommon ");
 
-        NetworkInterface ni = null;
-        ni = NetCommon.getEthernetNetworkInterface();
+        NetworkInterface ni = NetCommon.getEthernetNetworkInterface();
         if (ni != null) {
             System.out.println(ni.getName());
             System.out.println(NetCommon.getHostAddress(ni));
@@ -48,12 +56,4 @@ public class OtherTest {
         //        }
     }
 
-    @Test
-    //@Disabled
-    public void testLambdaGetter() {
-        Function f = LambdaFactory.newSerializedMethodReferences("fieldName");
-        String s = LambdaFactory.getMethodReferencesName(f);
-        System.out.println(s);
-        Assertions.assertEquals(s, "fieldName");
-    }
 }
