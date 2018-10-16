@@ -61,7 +61,8 @@ public class LambdaFactory {
         return newMethodReferences(methodName, true);
     }
 
-    // 若开启javaagent可直接用库 - https://github.com/ruediste/lambda-inspector
+    //  若开启javaagent可直接用库 - https://github.com/ruediste/lambda-inspector
+    //  可考虑将Object.class更换为可序列化的String和Integer等
     private static Function newMethodReferences(String methodName, boolean isSerializable) {
         methodName = HexConverter.bytesToHexString(methodName.getBytes());// 支持数字开头method。
 
