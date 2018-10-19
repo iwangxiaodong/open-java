@@ -2,7 +2,8 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 String mavenGroupId = 'com.openle.module'
-String mavenVersion = '1.0.6'   //  '1.0.3-b10'
+String mavenVersion = '1.0.7'  
+mavenVersion = '1.0.7-SNAPSHOT'
 
 // android编译器只支持到jdk8
 //sourceCompatibility = JavaVersion.VERSION_1_9
@@ -62,7 +63,7 @@ configurations {
 }
 
 dependencies {
-    deployerJars group: 'org.apache.maven.wagon', name: 'wagon-webdav-jackrabbit', version: '3.0.0'
+    deployerJars group: 'org.apache.maven.wagon', name: 'wagon-webdav-jackrabbit', version: '3.2.0'
 }
 
 apply plugin: 'maven'

@@ -11,11 +11,13 @@ test {
 }
 
 jar {     
+  
     // 解决MethodHandle.invoke and MethodHandle.invokeExact are only supported starting with Android O (--min-api 26)
     // 也可以在android配置中通过Proguard删除未使用的代码
     //exclude('com/openle/module/core/lambda/LambdaFactory**')
     
     //exclude('my/package/excluded/**')
+    
 }
 
 // common.gradle已存在该task
@@ -39,7 +41,6 @@ artifacts {
     archives javadocJar
     archives sourcesJar
 }
-
 
 dependencies {
     testCompile("org.junit.jupiter:junit-jupiter-api:5.3.1")
@@ -94,10 +95,11 @@ publishing {
 
 //  gradle artifactoryPublish
 artifactory {
-    //contextUrl = 'http://oss.jfrog.org/artifactory'
+    contextUrl = 'http://oss.jfrog.org/artifactory'
     publish {
         repository {
             repoKey = 'oss-snapshot-local' // The Artifactory repository key to publish to
+            //repoKey = 'libs-snapshot'
             username = project.ext.bUser // The publisher user name
             password = project.ext.bKey // The publisher password
         }
