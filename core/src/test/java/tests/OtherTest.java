@@ -1,25 +1,14 @@
 package tests;
 
-import com.openle.our.core.lambda.LambdaFactory;
 import com.openle.our.core.network.NetCommon;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.*;
 
 public class OtherTest {
-
-    @Test
-    //@Disabled
-    public void testLambdaGetter() {
-        Function f = LambdaFactory.newSerializedMethodReferences("fieldName");
-        String s = LambdaFactory.getMethodReferencesName(f);
-        System.out.println(s);
-        Assertions.assertEquals(s, "fieldName");
-    }
 
     @Test
     public void testNetCommon() throws SocketException, UnknownHostException {

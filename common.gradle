@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 String mavenGroupId = 'com.openle.module'
-String mavenVersion = '1.0.7'
+String mavenVersion = '1.0.8'
 //mavenVersion = '1.0.7-SNAPSHOT'
 
 // android编译器只支持到jdk8
@@ -66,11 +66,13 @@ dependencies {
     deployerJars group: 'org.apache.maven.wagon', name: 'wagon-webdav-jackrabbit', version: '3.2.0'
 }
 
-task uploadSnapshot(dependsOn: assemble) {
-    version version+'-SNAPSHOT'
-    doLast{
-        println 'publish SNAPSHOT... '+project.version
-        uploadArchives.execute()
+task snapshot(dependsOn:assemble) << {
+    uploadArchives.execute()
+}
+gradle.taskGraph.whenReady {taskGraph ->
+    if (taskGraph.hasTask(snapshot)) {
+        version = version+'-SNAPSHOT'
+        println version
     }
 }
 

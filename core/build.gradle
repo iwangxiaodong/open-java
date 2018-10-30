@@ -76,7 +76,7 @@ bintray {
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/iwangxiaodong/open-java.git'
         version {
-            name = project.version.toString()
+            //name = project.version.toString()
             desc = project.name
         }
     }
