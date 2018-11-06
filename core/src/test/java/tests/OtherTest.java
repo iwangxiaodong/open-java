@@ -1,6 +1,8 @@
 package tests;
 
+import com.openle.our.core.io.Serializer;
 import com.openle.our.core.network.NetCommon;
+import java.io.IOException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -9,6 +11,14 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.*;
 
 public class OtherTest {
+
+    @Test
+    public void testSerializer() throws IOException, ClassNotFoundException {
+        String eString = toString();
+        byte[] bytes = Serializer.objectToBytes(eString);
+        String obj = (String) Serializer.bytesToObject(bytes);
+        Assertions.assertEquals(eString, obj);
+    }
 
     @Test
     public void testNetCommon() throws SocketException, UnknownHostException {

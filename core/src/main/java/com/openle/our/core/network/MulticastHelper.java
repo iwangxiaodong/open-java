@@ -7,17 +7,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-// from - https://github.com/cubesky/MulticastHelper
+//  from - https://github.com/cubesky/MulticastHelper
 public class MulticastHelper implements Closeable {
 
     public interface MulticastCallback {
+
         /**
          * Multicast Callback
          *
          * @param address multicast source host
-         * @param port    multicast source port
-         * @param array   Arrived Multicast Data
-         * @param dp    ...
+         * @param port multicast source port
+         * @param array Arrived Multicast Data
+         * @param dp ...
          */
         void received(String address, int port, byte[] array, DatagramPacket dp);
 
@@ -35,7 +36,8 @@ public class MulticastHelper implements Closeable {
     /**
      * Generate a multicast helper
      *
-     * @param multicastHost Multicast Host, Must between 224.0.0.0 to 239.255.255.255
+     * @param multicastHost Multicast Host, Must between 224.0.0.0 to
+     * 239.255.255.255
      * @param multicastPort Multicast Port
      */
     public MulticastHelper(String multicastHost, int multicastPort) {
@@ -46,7 +48,8 @@ public class MulticastHelper implements Closeable {
     /**
      * Send Multicast without new a MulticastHelper Object
      *
-     * @param multicastHost Multicast Host, Must between 224.0.0.0 to 239.255.255.255
+     * @param multicastHost Multicast Host, Must between 224.0.0.0 to
+     * 239.255.255.255
      * @param multicastPort Multicast Port
      * @param multicastData Multicast Data you want to send
      * @throws IOException Exception on IO
@@ -92,13 +95,15 @@ public class MulticastHelper implements Closeable {
         receiveMulticastSocket = new MulticastSocket(multicastPort);
         receiveMulticastSocket.joinGroup(receiveInetAddress);
         future = service.submit(() -> {
-            byte[] buf = new byte[2048];
+            //byte[] buf = new byte[2048];
+            byte[] buf = new byte[8192];    //  8192字节为大多数平台默认
             while (true) {
                 DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
                 receiveMulticastSocket.receive(msgPacket);
                 //System.err.println("msg - " + new String(buf, 0, msgPacket.getLength()));
-                if (callback != null)
+                if (callback != null) {
                     callback.received(msgPacket.getAddress().getHostAddress(), msgPacket.getPort(), msgPacket.getData(), msgPacket);
+                }
             }
         });
     }
@@ -119,19 +124,20 @@ public class MulticastHelper implements Closeable {
         receiveMulticastSocket = new MulticastSocket(multicastPort);
         receiveMulticastSocket.joinGroup(new InetSocketAddress(receiveInetAddress, multicastPort), networkInterface);
         future = service.submit(() -> {
-            byte[] buf = new byte[10240];
+            //byte[] buf = new byte[10240];
+            byte[] buf = new byte[8192];    //  8192字节为大多数平台默认
             while (true) {
                 DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
                 receiveMulticastSocket.receive(msgPacket);
-                if (callback != null)
-                    callback.received(msgPacket.getAddress().getHostAddress(), msgPacket.getPort(), msgPacket.getData(),msgPacket);
+                if (callback != null) {
+                    callback.received(msgPacket.getAddress().getHostAddress(), msgPacket.getPort(), msgPacket.getData(), msgPacket);
+                }
             }
         });
     }
 
     /**
-     * Close all.
-     * Also support try..resource
+     * Close all. Also support try..resource
      *
      * @throws IOException Exception on IO
      */

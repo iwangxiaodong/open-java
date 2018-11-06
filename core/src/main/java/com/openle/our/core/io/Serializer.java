@@ -10,15 +10,26 @@ import java.io.Serializable;
 public class Serializer {
 
     public static <T extends Serializable> byte[] objectToBytes(T obj) throws IOException {
-        ByteArrayOutputStream b = new ByteArrayOutputStream();
-        ObjectOutputStream o = new ObjectOutputStream(b);
-        o.writeObject(obj);
-        return b.toByteArray();
+        byte[] bytes;
+        try (ByteArrayOutputStream b = new ByteArrayOutputStream();
+                ObjectOutputStream o = new ObjectOutputStream(b)) {
+
+            o.writeObject(obj);
+            bytes = b.toByteArray();
+
+        }
+
+        return bytes;
     }
 
     public static <T extends Serializable> T bytesToObject(byte[] bytes) throws IOException, ClassNotFoundException {
-        ByteArrayInputStream b = new ByteArrayInputStream(bytes);
-        ObjectInputStream o = new ObjectInputStream(b);
-        return (T) o.readObject();
+        Object obj;
+        try (ByteArrayInputStream b = new ByteArrayInputStream(bytes);
+                ObjectInputStream o = new ObjectInputStream(b)) {
+
+            obj = o.readObject();
+
+        }
+        return (T) obj;
     }
 }
