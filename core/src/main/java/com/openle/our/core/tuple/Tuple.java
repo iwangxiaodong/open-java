@@ -14,8 +14,7 @@ public class Tuple {
             tuple(T1 p1, T2 p2, T3 p3) {
         return new Tuple3<>(p1, p2, p3);
     }
-
-    @Deprecated
+            
     public static <T1, T2, T3, T4> Tuple4<T1, T2, T3, T4>
             tuple(T1 p1, T2 p2, T3 p3, T4 p4) {
         return new Tuple4<>(p1, p2, p3, p4);
