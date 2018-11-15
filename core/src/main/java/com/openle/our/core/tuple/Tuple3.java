@@ -1,11 +1,13 @@
 package com.openle.our.core.tuple;
 
-public class Tuple3<T1, T2, T3> {
+import java.io.Serializable;
+
+public class Tuple3<T1, T2, T3> implements Serializable {
 
     public final T1 v1;
     public final T2 v2;
     public final T3 v3;
-
+    
     public Tuple3(T1 p1, T2 p2, T3 p3) {
         v1 = p1;
         v2 = p2;

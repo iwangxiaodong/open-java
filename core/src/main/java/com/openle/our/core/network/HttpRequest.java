@@ -23,10 +23,6 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-/**
- *
- * @author 168
- */
 public class HttpRequest {
     //
     //part.getHeader(contentDisposition)

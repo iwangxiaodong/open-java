@@ -30,8 +30,8 @@ public class TransferObject implements Serializable {
     private List<String> toAddresses;
     private List<String> fromAddresses;
 
-    private List<byte[]> to;    //  多目标Tuple4序列化
-    private byte[] from;    //  单来源Tuple4序列化
+    private List<byte[]> to;    //  多目标Tuple3/4序列化
+    private byte[] from;    //  单来源Tuple3/4序列化
 
     public List<byte[]> getTo() {
         return to;

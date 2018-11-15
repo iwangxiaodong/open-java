@@ -2,6 +2,7 @@ package tests;
 
 import com.openle.our.core.io.Serializer;
 import com.openle.our.core.network.NetCommon;
+import com.openle.our.core.tuple.Tuple3;
 import java.io.IOException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -18,6 +19,14 @@ public class OtherTest {
         byte[] bytes = Serializer.objectToBytes(eString);
         String obj = (String) Serializer.bytesToObject(bytes);
         Assertions.assertEquals(eString, obj);
+    }
+
+    @Test
+    public void testTupleSerializer1() throws IOException, ClassNotFoundException {
+        Tuple3 t3 = new Tuple3(1, 2, 3);
+        byte[] bytes = Serializer.objectToBytes(t3);
+        Tuple3 newT3 = (Tuple3) Serializer.bytesToObject(bytes);
+        Assertions.assertEquals(t3.v2, newT3.v2);
     }
 
     @Test

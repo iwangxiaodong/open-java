@@ -12,7 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-
 public class NetCommon {
 
     //  获取所有网络接口
@@ -258,5 +257,4 @@ public class NetCommon {
 //        }
 //        return macSerial;
 //    }
-   
 }
