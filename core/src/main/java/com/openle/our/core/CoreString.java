@@ -1,6 +1,6 @@
 package com.openle.our.core;
 
-public class StringPlus {
+public class CoreString {
 
 //    System.out.println("*" + padWhitespaceLeft("moon", 12) + "*");
 //    System.out.println("*" + padWhitespaceRight("moon", 12) + "*");
@@ -40,5 +40,13 @@ public class StringPlus {
             charr[i] = ch;
         }
         return new String(charr);
+    }
+
+    public static String firstCharToLowerCase(String s) {
+        if (s != null && !s.isEmpty()) {
+            String c = s.substring(0, 1);
+            s = s.replaceFirst(c, c.toLowerCase());
+        }
+        return s;
     }
 }

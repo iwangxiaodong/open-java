@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 String mavenGroupId = 'com.openle.module'
-String mavenVersion = '1.0.9'
+String mavenVersion = '1.0.10'
 
 // android编译器只支持到jdk8
 //sourceCompatibility = JavaVersion.VERSION_1_9
@@ -65,15 +65,16 @@ dependencies {
     deployerJars group: 'org.apache.maven.wagon', name: 'wagon-webdav-jackrabbit', version: '3.2.0'
 }
 
-task snapshot(dependsOn:assemble) << {
-    uploadArchives.execute()
-}
-gradle.taskGraph.whenReady {taskGraph ->
-    if (taskGraph.hasTask(snapshot)) {
-        version = version+'-SNAPSHOT'
-        println version
-    }
-}
+//task snapshot(dependsOn:assemble) << {
+//    uploadArchives.execute()
+//}
+//
+//gradle.taskGraph.whenReady {taskGraph ->
+//    if (taskGraph.hasTask(snapshot)) {
+//        version = version+'-SNAPSHOT'
+//        println version
+//    }
+//}
 
 project.ext.pwd = project.hasProperty('WEBDAV_PASSWORD') ? project.property('WEBDAV_PASSWORD') : System.getenv('WEBDAV_PASSWORD')
 apply plugin: 'maven'
