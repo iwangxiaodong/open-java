@@ -153,21 +153,6 @@ public class Shell {
             }
 
             error.append(IO.inputStreamToString(process.getErrorStream()));
-//            try {
-//                stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream(), "UTF-8"));
-//            } catch (UnsupportedEncodingException e) {
-//                e.printStackTrace();
-//            }
-//
-//            if (stdErr != null) {
-//                try {
-//                    while ((line = stdErr.readLine()) != null) {
-//                        error.append(line).append('\n');
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
 
         }
 

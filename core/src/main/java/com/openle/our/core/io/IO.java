@@ -48,19 +48,15 @@ public class IO {
         File f = new File(path);
         if (f.exists()) {
             try {
-                InputStreamReader isr = new InputStreamReader(
-                        new FileInputStream(f), "UTF-8");
-
-                BufferedReader br = new BufferedReader(isr);
-                String data = null;
-                while ((data = br.readLine()) != null) {
-                    if (result == null) {
-                        result = "";
+                try (InputStreamReader isr = new InputStreamReader(new FileInputStream(f), "UTF-8"); BufferedReader br = new BufferedReader(isr)) {
+                    String data;
+                    while ((data = br.readLine()) != null) {
+                        if (result == null) {
+                            result = "";
+                        }
+                        result += data + newLine;
                     }
-                    result += data + newLine;
                 }
-                isr.close();
-                br.close();
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
@@ -75,13 +71,10 @@ public class IO {
             if (!f.exists()) {
                 f.createNewFile();
             }
-            OutputStreamWriter write = new OutputStreamWriter(
-                    new FileOutputStream(f), "UTF-8");
-            BufferedWriter bw = new BufferedWriter(write);
-            bw.write(content);
-            bw.close();
-            write.close();
-        } catch (Exception e) {
+            try (OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream(f), "UTF-8"); BufferedWriter bw = new BufferedWriter(write)) {
+                bw.write(content);
+            }
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -111,7 +104,7 @@ public class IO {
                 sb.append(line).append(newLine);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
         return sb.toString();
     }

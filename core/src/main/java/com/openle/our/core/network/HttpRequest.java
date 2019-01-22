@@ -83,10 +83,10 @@ public class HttpRequest {
             // 开始GET数据
             String encoding = httpConn.getContentEncoding();
             InputStream is = httpConn.getInputStream();
-            int read = -1;
             baoStream = new ByteArrayOutputStream();
-            while ((read = is.read()) != -1) {
-                baoStream.write(read);
+            int ch;
+            while ((ch = is.read()) != -1) {
+                baoStream.write(ch);
             }
             byte[] data = baoStream.toByteArray();
             baoStream.close();
@@ -133,16 +133,14 @@ public class HttpRequest {
 
             InputStream in = urlConnection.getInputStream();
             // 取得输入流，并使用Reader读取
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(in));
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+                System.out.println("Contents of get request");
+                String lines;
 
-            System.out.println("Contents of get request");
-            String lines;
-
-            while ((lines = reader.readLine()) != null) {
-                html += lines;
+                while ((lines = reader.readLine()) != null) {
+                    html += lines;
+                }
             }
-            reader.close();
             // 断开连接
             urlConnection.disconnect();
 
@@ -151,11 +149,7 @@ public class HttpRequest {
             System.out.println("Contents of get request ends");
         } catch (MalformedURLException e) {
             r.setError(e.getMessage());
-        } catch (IOException e) {
-            r.setError(e.getMessage());
-        } catch (NoSuchAlgorithmException e) {
-            r.setError(e.getMessage());
-        } catch (KeyManagementException e) {
+        } catch (IOException | NoSuchAlgorithmException | KeyManagementException e) {
             r.setError(e.getMessage());
         }
 

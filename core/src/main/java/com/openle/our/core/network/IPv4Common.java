@@ -1,12 +1,8 @@
 package com.openle.our.core.network;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
-/**
- * @author michael <br>
- *         blog: http://sjsky.iteye.com <br>
- *         mail: sjsky007@gmail.com
- */
 public class IPv4Common {
 
     private final static int INADDRSZ = 4;
@@ -15,8 +11,8 @@ public class IPv4Common {
     public static byte[] ipToBytesByInet(String ipAddr) {
         try {
             return InetAddress.getByName(ipAddr).getAddress();
-        } catch (Exception e) {
-            throw new IllegalArgumentException(ipAddr + " is invalid IP");
+        } catch (UnknownHostException e) {
+            throw new IllegalArgumentException(ipAddr + " is invalid IP - " + e);
         }
     }
 
@@ -30,8 +26,8 @@ public class IPv4Common {
             ret[2] = (byte) (Integer.parseInt(ipArr[2]) & 0xFF);
             ret[3] = (byte) (Integer.parseInt(ipArr[3]) & 0xFF);
             return ret;
-        } catch (Exception e) {
-            throw new IllegalArgumentException(ipAddr + " is invalid IP");
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(ipAddr + " is invalid IP - " + e);
         }
 
     }
@@ -57,7 +53,7 @@ public class IPv4Common {
         try {
             return bytesToInt(ipToBytesByInet(ipAddr));
         } catch (Exception e) {
-            throw new IllegalArgumentException(ipAddr + " is invalid IP");
+            throw new IllegalArgumentException(ipAddr + " is invalid IP - " + e);
         }
     }
 
@@ -75,7 +71,7 @@ public class IPv4Common {
     public static String intToIp(int ipInt) {
         return new StringBuilder().append(((ipInt >> 24) & 0xff)).append('.')
                 .append((ipInt >> 16) & 0xff).append('.').append(
-                        (ipInt >> 8) & 0xff).append('.').append((ipInt & 0xff))
+                (ipInt >> 8) & 0xff).append('.').append((ipInt & 0xff))
                 .toString();
     }
 
@@ -95,32 +91,32 @@ public class IPv4Common {
         int ipInt = IPv4Common.ipToInt(ipArr[0]);
         int netIP = ipInt & (0xFFFFFFFF << (32 - netMask));
         int hostScope = (0xFFFFFFFF >>> netMask);
-        return new int[] { netIP, netIP + hostScope };
+        return new int[]{netIP, netIP + hostScope};
 
     }
 
     // 把192.168.1.1/24 转化为IP数组范围
     public static String[] getIPAddrScope(String ipAndMask) {
         int[] ipIntArr = IPv4Common.getIPIntScope(ipAndMask);
-        return new String[] { IPv4Common.intToIp(ipIntArr[0]),
-        		IPv4Common.intToIp(ipIntArr[0]) };
+        return new String[]{IPv4Common.intToIp(ipIntArr[0]),
+            IPv4Common.intToIp(ipIntArr[0])};
     }
 
     // 根据IP 子网掩码（192.168.1.1 255.255.255.0）转化为IP段
     public static int[] getIPIntScope(String ipAddr, String mask) {
 
         int ipInt;
-        int netMaskInt = 0, ipcount = 0;
+        int netMaskInt, ipcount;
         try {
             ipInt = IPv4Common.ipToInt(ipAddr);
             if (null == mask || "".equals(mask)) {
-                return new int[] { ipInt, ipInt };
+                return new int[]{ipInt, ipInt};
             }
             netMaskInt = IPv4Common.ipToInt(mask);
             ipcount = IPv4Common.ipToInt("255.255.255.255") - netMaskInt;
             int netIP = ipInt & netMaskInt;
             int hostScope = netIP + ipcount;
-            return new int[] { netIP, hostScope };
+            return new int[]{netIP, hostScope};
         } catch (Exception e) {
             throw new IllegalArgumentException("invalid ip scope express  ip:"
                     + ipAddr + "  mask:" + mask);
@@ -131,70 +127,70 @@ public class IPv4Common {
     // 根据IP 子网掩码（192.168.1.1 255.255.255.0）转化为IP段
     public static String[] getIPStrScope(String ipAddr, String mask) {
         int[] ipIntArr = IPv4Common.getIPIntScope(ipAddr, mask);
-        return new String[] { IPv4Common.intToIp(ipIntArr[0]),
-        		IPv4Common.intToIp(ipIntArr[0]) };
+        return new String[]{IPv4Common.intToIp(ipIntArr[0]),
+            IPv4Common.intToIp(ipIntArr[0])};
     }
 
     public static void main(String[] args) throws Exception {
-        String ipAddr = "192.168.8.1";
-        //ipAddr="255.255.255.255";
-        ipAddr="0.0.255.255"; // out 65535
-        byte[] bytearr = IPv4Common.ipToBytesByInet(ipAddr);
-
-        StringBuffer byteStr = new StringBuffer();
-
-        for (byte b : bytearr) {
-            if (byteStr.length() == 0) {
-                byteStr.append(b);
-            } else {
-                byteStr.append("," + b);
-            }
-        }
-        System.out.println("IP: " + ipAddr + " ByInet --> byte[]: [ " + byteStr
-                + " ]");
-
-        bytearr = IPv4Common.ipToBytesByReg(ipAddr);
-        byteStr = new StringBuffer();
-
-        for (byte b : bytearr) {
-            if (byteStr.length() == 0) {
-                byteStr.append(b);
-            } else {
-                byteStr.append("," + b);
-            }
-        }
-        System.out.println("IP: " + ipAddr + " ByReg  --> byte[]: [ " + byteStr
-                + " ]");
-
-        System.out.println("byte[]: " + byteStr + " --> IP: "
-                + IPv4Common.bytesToIp(bytearr));
-
-        int ipInt = IPv4Common.ipToInt(ipAddr);
-
-        System.out.println("IP: " + ipAddr + "  --> int: " + ipInt);
-
-        System.out.println("int: " + ipInt + " --> IP: "
-                + IPv4Common.intToIp(ipInt));
-
-        String ipAndMask = "192.168.1.1/24";
-
-        int[] ipscope = IPv4Common.getIPIntScope(ipAndMask);
-        System.out.println(ipAndMask + " --> int地址段：[ " + ipscope[0] + ","
-                + ipscope[1] + " ]");
-
-        System.out.println(ipAndMask + " --> IP 地址段：[ "
-                + IPv4Common.intToIp(ipscope[0]) + ","
-                + IPv4Common.intToIp(ipscope[1]) + " ]");
-
-        String ipAddr1 = "192.168.1.1", ipMask1 = "255.255.255.0";
-
-        int[] ipscope1 = IPv4Common.getIPIntScope(ipAddr1, ipMask1);
-        System.out.println(ipAddr1 + " , " + ipMask1 + "  --> int地址段 ：[ "
-                + ipscope1[0] + "," + ipscope1[1] + " ]");
-
-        System.out.println(ipAddr1 + " , " + ipMask1 + "  --> IP地址段 ：[ "
-                + IPv4Common.intToIp(ipscope1[0]) + ","
-                + IPv4Common.intToIp(ipscope1[1]) + " ]");
+//        String ipAddr = "192.168.8.1";
+//        //ipAddr="255.255.255.255";
+//        ipAddr = "0.0.255.255"; // out 65535
+//        byte[] bytearr = IPv4Common.ipToBytesByInet(ipAddr);
+//
+//        StringBuffer byteStr = new StringBuffer();
+//
+//        for (byte b : bytearr) {
+//            if (byteStr.length() == 0) {
+//                byteStr.append(b);
+//            } else {
+//                byteStr.append("," + b);
+//            }
+//        }
+//        System.out.println("IP: " + ipAddr + " ByInet --> byte[]: [ " + byteStr
+//                + " ]");
+//
+//        bytearr = IPv4Common.ipToBytesByReg(ipAddr);
+//        byteStr = new StringBuffer();
+//
+//        for (byte b : bytearr) {
+//            if (byteStr.length() == 0) {
+//                byteStr.append(b);
+//            } else {
+//                byteStr.append("," + b);
+//            }
+//        }
+//        System.out.println("IP: " + ipAddr + " ByReg  --> byte[]: [ " + byteStr
+//                + " ]");
+//
+//        System.out.println("byte[]: " + byteStr + " --> IP: "
+//                + IPv4Common.bytesToIp(bytearr));
+//
+//        int ipInt = IPv4Common.ipToInt(ipAddr);
+//
+//        System.out.println("IP: " + ipAddr + "  --> int: " + ipInt);
+//
+//        System.out.println("int: " + ipInt + " --> IP: "
+//                + IPv4Common.intToIp(ipInt));
+//
+//        String ipAndMask = "192.168.1.1/24";
+//
+//        int[] ipscope = IPv4Common.getIPIntScope(ipAndMask);
+//        System.out.println(ipAndMask + " --> int地址段：[ " + ipscope[0] + ","
+//                + ipscope[1] + " ]");
+//
+//        System.out.println(ipAndMask + " --> IP 地址段：[ "
+//                + IPv4Common.intToIp(ipscope[0]) + ","
+//                + IPv4Common.intToIp(ipscope[1]) + " ]");
+//
+//        String ipAddr1 = "192.168.1.1", ipMask1 = "255.255.255.0";
+//
+//        int[] ipscope1 = IPv4Common.getIPIntScope(ipAddr1, ipMask1);
+//        System.out.println(ipAddr1 + " , " + ipMask1 + "  --> int地址段 ：[ "
+//                + ipscope1[0] + "," + ipscope1[1] + " ]");
+//
+//        System.out.println(ipAddr1 + " , " + ipMask1 + "  --> IP地址段 ：[ "
+//                + IPv4Common.intToIp(ipscope1[0]) + ","
+//                + IPv4Common.intToIp(ipscope1[1]) + " ]");
 
     }
 }
