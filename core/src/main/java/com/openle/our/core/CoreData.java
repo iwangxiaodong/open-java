@@ -11,6 +11,8 @@ import java.util.logging.Logger;
 public class CoreData {
 
     /**
+     * Or use implementation 'org.owasp.encoder:encoder:1.2.2'
+     * org.owasp.esapi.Encoder#encodeForSQL(org.owasp.esapi.codecs.Codec,String)
      *
      * @param str sql
      *
@@ -20,8 +22,8 @@ public class CoreData {
         if (str == null) {
             return null;
         }
-        return str.replace("'", "''").replace("\\", "\\\\")
-                .replace("\r", "\\r").replace("\n", "\\n");
+        return str.replace("'", "''")   //  StringEscapeUtils.escapeSql(...)实现仅仅替换单引号至双引号而已。
+                .replace("\\", "\\\\").replace("\r", "\\r").replace("\n", "\\n");
     }
 
     //  注意 - 需要引入persistence api

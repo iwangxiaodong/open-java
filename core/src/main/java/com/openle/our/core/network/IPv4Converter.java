@@ -3,7 +3,7 @@ package com.openle.our.core.network;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class IPv4Common {
+public class IPv4Converter {
 
     private final static int INADDRSZ = 4;
 
@@ -88,7 +88,7 @@ public class IPv4Common {
             throw new IllegalArgumentException("invalid ipAndMask with: "
                     + ipAndMask);
         }
-        int ipInt = IPv4Common.ipToInt(ipArr[0]);
+        int ipInt = IPv4Converter.ipToInt(ipArr[0]);
         int netIP = ipInt & (0xFFFFFFFF << (32 - netMask));
         int hostScope = (0xFFFFFFFF >>> netMask);
         return new int[]{netIP, netIP + hostScope};
@@ -97,9 +97,9 @@ public class IPv4Common {
 
     // 把192.168.1.1/24 转化为IP数组范围
     public static String[] getIPAddrScope(String ipAndMask) {
-        int[] ipIntArr = IPv4Common.getIPIntScope(ipAndMask);
-        return new String[]{IPv4Common.intToIp(ipIntArr[0]),
-            IPv4Common.intToIp(ipIntArr[0])};
+        int[] ipIntArr = IPv4Converter.getIPIntScope(ipAndMask);
+        return new String[]{IPv4Converter.intToIp(ipIntArr[0]),
+            IPv4Converter.intToIp(ipIntArr[0])};
     }
 
     // 根据IP 子网掩码（192.168.1.1 255.255.255.0）转化为IP段
@@ -108,12 +108,12 @@ public class IPv4Common {
         int ipInt;
         int netMaskInt, ipcount;
         try {
-            ipInt = IPv4Common.ipToInt(ipAddr);
+            ipInt = IPv4Converter.ipToInt(ipAddr);
             if (null == mask || "".equals(mask)) {
                 return new int[]{ipInt, ipInt};
             }
-            netMaskInt = IPv4Common.ipToInt(mask);
-            ipcount = IPv4Common.ipToInt("255.255.255.255") - netMaskInt;
+            netMaskInt = IPv4Converter.ipToInt(mask);
+            ipcount = IPv4Converter.ipToInt("255.255.255.255") - netMaskInt;
             int netIP = ipInt & netMaskInt;
             int hostScope = netIP + ipcount;
             return new int[]{netIP, hostScope};
@@ -126,9 +126,9 @@ public class IPv4Common {
 
     // 根据IP 子网掩码（192.168.1.1 255.255.255.0）转化为IP段
     public static String[] getIPStrScope(String ipAddr, String mask) {
-        int[] ipIntArr = IPv4Common.getIPIntScope(ipAddr, mask);
-        return new String[]{IPv4Common.intToIp(ipIntArr[0]),
-            IPv4Common.intToIp(ipIntArr[0])};
+        int[] ipIntArr = IPv4Converter.getIPIntScope(ipAddr, mask);
+        return new String[]{IPv4Converter.intToIp(ipIntArr[0]),
+            IPv4Converter.intToIp(ipIntArr[0])};
     }
 
     public static void main(String[] args) throws Exception {

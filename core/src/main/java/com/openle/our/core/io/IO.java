@@ -1,26 +1,144 @@
 package com.openle.our.core.io;
 
 //import org.apache.commons.io.FilenameUtils;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-//Note: readLine方式遇到\r\n字符才返回缓冲数据。
 public class IO {
 
-    public static String newLine = System.lineSeparator();//System.getProperty("line.separator");
+    public static String readText(String path) {
+
+        String r = null;
+        try {
+            //  or Files.lines(Paths.get("D:\\jd.txt")).forEach(System.out::println);
+            //  注意 - Files.readAllLines返回值不包括换行符
+            r = Files.readString(Paths.get(path), StandardCharsets.UTF_8);
+        } catch (IOException ex) {
+            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return r;
+
+//        String result = null;
+//        File f = new File(path);
+//        if (f.exists()) {
+//            try {
+//                try (InputStreamReader isr = new InputStreamReader(new FileInputStream(f), "UTF-8"); BufferedReader br = new BufferedReader(isr)) {
+//                    String data;
+//                    while ((data = br.readLine()) != null) {
+//                        if (result == null) {
+//                            result = "";
+//                        }
+//                        result += data + newLine;
+//                    }
+//                }
+//            } catch (IOException e) {
+//                System.out.println(e.getMessage());
+//            }
+//        }
+//
+//        return result != null ? result.trim() : null;
+    }
+
+    public static void writeText(String path, String content) {
+        File f = new File(path);
+        try {
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            try (OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream(f), "UTF-8"); BufferedWriter bw = new BufferedWriter(write)) {
+                bw.write(content);
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static String inputStreamToString(InputStream is) {
+        return inputStreamToString(is, null);
+    }
+
+    //  BufferedReader需要处理换行符,而InputStreamReader则不需要.
+    public static String inputStreamToString(InputStream is, String charsetName) {
+        if (is == null) {
+            System.err.println("inputStreamToString(...) InputStream is null!");
+            return null;
+        }
+
+        StringBuilder temp = new StringBuilder();
+
+        try (InputStreamReader rd = new InputStreamReader(is,
+                charsetName != null ? charsetName : Charset.defaultCharset().name())) {
+            int c = 0;
+            while ((c = rd.read()) != -1) {
+                temp.append((char) c);
+            }
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return temp.toString();
+    }
+
+    //  保持输入流原始字符集信息
+    public static String inputStreamToStringKeepOriginalCharset(InputStream is) {
+        byte[] buffer = new byte[2048];
+        int readBytes = 0;
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            while ((readBytes = is.read(buffer)) > 0) {
+                stringBuilder.append(new String(buffer, 0, readBytes));
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public static String inputStreamToStringByScanner(InputStream is) {
+        return inputStreamToString(is, null);    //  or "UTF-8"
+    }
+
+    //  效率没InputStreamReader高;  
+    //  仅用于极短文本流及控制台输入流System.in
+    //  类似按空格分割的split方法。
+    public static String inputStreamToStringByScanner(InputStream is, String charsetName) {
+
+        if (is == null) {
+            System.err.println("inputStreamToString(...) InputStream is null!");
+            return null;
+        }
+
+        //  scanner.ioException()可获取其忽略的exception
+        Scanner s = charsetName != null ? new Scanner(is, charsetName) : new Scanner(is);
+        s.useDelimiter("\\A");
+        return s.hasNext() ? s.next() : null;
+    }
+
+    public static boolean deleteFile(String fileName) {
+        File file = new File(fileName);
+        return file.delete();
+    }
 
     // 强制删除文件/文件夹(含不为空的文件夹)
     public static void deleteIfExistsWithNotEmpty(Path dir) throws IOException {
@@ -43,72 +161,6 @@ public class IO {
         }
     }
 
-    public static String readText(String path) {
-        String result = null;
-        File f = new File(path);
-        if (f.exists()) {
-            try {
-                try (InputStreamReader isr = new InputStreamReader(new FileInputStream(f), "UTF-8"); BufferedReader br = new BufferedReader(isr)) {
-                    String data;
-                    while ((data = br.readLine()) != null) {
-                        if (result == null) {
-                            result = "";
-                        }
-                        result += data + newLine;
-                    }
-                }
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-
-        return result != null ? result.trim() : null;
-    }
-
-    public static void writeText(String path, String content) {
-        File f = new File(path);
-        try {
-            if (!f.exists()) {
-                f.createNewFile();
-            }
-            try (OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream(f), "UTF-8"); BufferedWriter bw = new BufferedWriter(write)) {
-                bw.write(content);
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public static boolean deleteFile(String fileName) {
-        File file = new File(fileName);
-        return file.delete();
-    }
-
-//    //todo 临时注释，后续研究是否要引入Commons IO
-//    public static String getExt(String fileName) {
-//        return FilenameUtils.getExtension(fileName);
-//    }
-    public static String inputStreamToString(InputStream is) {
-        if (is != null) {
-            System.err.println("inputStreamToString() InputStream is null!");
-            return null;
-        }
-
-        StringBuilder sb = new StringBuilder();
-        try {
-            BufferedReader buf = new BufferedReader(new InputStreamReader(is,
-                    "UTF-8"));
-            String line;
-            while ((line = buf.readLine()) != null) {
-                //sb.append(line);
-                sb.append(line).append(newLine);
-            }
-        } catch (IOException e) {
-            System.err.println(e);
-        }
-        return sb.toString();
-    }
-
     public static String fileSizeFormat(long size) {
         long kb = 1024;
         long mb = kb * 1024;
@@ -126,4 +178,9 @@ public class IO {
             return String.format("%d B", size);
         }
     }
+
+    //    //todo 临时注释，后续研究是否要引入Commons IO
+//    public static String getExt(String fileName) {
+//        return FilenameUtils.getExtension(fileName);
+//    }
 }

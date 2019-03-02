@@ -19,6 +19,6 @@ public class JavaCodeGeneratorTest {
                     });
         });
         Supplier supplier = compiled.newInstance();
-        Assertions.assertEquals(supplier.get(), "Hello");
+        Assertions.assertEquals("Hello", supplier.get());
     }
 }

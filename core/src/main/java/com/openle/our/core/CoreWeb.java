@@ -50,6 +50,7 @@ public class CoreWeb {
             System.err.println(e);
         }
 
+//        //  原始实现：
 //        HTMLDocument doc = new HTMLDocument();
 //        try {
 //            new HTMLEditorKit().read(new StringReader("<html><body>" + str), doc, 0);

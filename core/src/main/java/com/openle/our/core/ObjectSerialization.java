@@ -3,7 +3,7 @@ package com.openle.our.core;
 import java.util.Arrays;
 
 /**
- *
+ * 序列化实现有SnakeYAML、ObjectOutputStream/ObjectInputStream、Eclipse Yasson
  * @author 168
  */
 public interface ObjectSerialization {
@@ -17,7 +17,7 @@ public interface ObjectSerialization {
     //  不适用于ObjectOutputStream
     Object load(String text);
 
-    //  Java Built-in
+    //  Java Built-in - 根据字节头判断
     default boolean isJavaBuiltIn(byte[] bytes) {
         if (bytes.length < 2) {
             return false;
