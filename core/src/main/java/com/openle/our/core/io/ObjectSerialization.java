@@ -1,12 +1,14 @@
-package com.openle.our.core;
+package com.openle.our.core.io;
 
-import java.util.Arrays;
+import java.io.ObjectStreamConstants;
+import java.nio.ByteBuffer;
 
 /**
  * 序列化实现有SnakeYAML、ObjectOutputStream/ObjectInputStream、Eclipse Yasson
  *
  * @author 168
  */
+//  如果是ObjectOutputStream,则会dump时调用writeSystemHeader()在bytes开头写入AC ED 00 05
 public interface ObjectSerialization {
 
     //  返回的是new String(bytes)，后续考虑用hex取代之
@@ -15,7 +17,6 @@ public interface ObjectSerialization {
         return new String(dumpToByteArray(obj));
     }
 
-    //  如果是ObjectOutputStream,则会调用writeSystemHeader()在bytes开头写入AC ED 00 05
     byte[] dumpToByteArray(Object obj);
 
     //  实现中需要判断isBinary(...)来决定需不需要new String(bytes)
@@ -28,18 +29,18 @@ public interface ObjectSerialization {
     }
 
     //  null=AUTO
-    public enum SerializationMode {
+    public enum StreamMode {
         AUTO, BINARY, TEXT;
     }
 
-    SerializationMode serializationMode();
+    StreamMode streamMode();
 
     //  Java Built-in - 根据字节头判断
     //  目前只支持ObjectOutputStream为Binary数据
-    default boolean isBinary(byte[] bytes) {
-        if (serializationMode().name().equals(SerializationMode.BINARY.name())) {
+    default boolean isBinaryStream(byte[] bytes) {
+        if (streamMode().name().equals(StreamMode.BINARY.name())) {
             return true;
-        } else if (serializationMode().name().equals(SerializationMode.TEXT.name())) {
+        } else if (streamMode().name().equals(StreamMode.TEXT.name())) {
             return false;
         }
 
@@ -47,8 +48,10 @@ public interface ObjectSerialization {
             return false;
         }
 
-        byte[] header = new byte[]{(byte) 0xAC, (byte) 0xED};
-        byte[] newHeader = new byte[]{bytes[0], bytes[1]};
-        return Arrays.equals(newHeader, header);
+        byte[] nowHeader = new byte[]{bytes[0], bytes[1]};
+        return ByteBuffer.wrap(nowHeader).getShort() == ObjectStreamConstants.STREAM_MAGIC;
+
+        //byte[] header = new byte[]{(byte) 0xAC, (byte) 0xED};
+        //return Arrays.equals(nowHeader, header);
     }
 }

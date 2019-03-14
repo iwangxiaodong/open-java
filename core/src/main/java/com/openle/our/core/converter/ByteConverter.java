@@ -12,7 +12,7 @@ import java.math.BigInteger;
  *
  * @author xiaodong
  */
-public class ByteConvert {
+public class ByteConverter {
 
 //    public static void main(String[] s) throws IOException, Exception {
 //        System.out.println("xxx");

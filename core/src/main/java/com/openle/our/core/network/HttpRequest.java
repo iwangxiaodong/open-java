@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Locale;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -140,34 +138,12 @@ public class HttpRequest {
         return content;
     }
 
-    //
-    //part.getHeader(contentDisposition)
-    // Header information
-    //public static String contentDisposition = "Content-Disposition";
-    // from org.apache.catalina.core > ApplicationPart.java
-    @SuppressWarnings("unchecked")
+    // String cd = request.getPart("xxx").getHeader("Content-Disposition");
     public static String getFileName(String cd) {
         String fileName = null;
-        // String cd = getHeader("Content-Disposition");
         if (cd != null) {
-            String cdl = cd.toLowerCase(Locale.ENGLISH);
-            if (cdl.startsWith("form-data") || cdl.startsWith("attachment")) {
-                ParameterParser paramParser = new ParameterParser();
-                paramParser.setLowerCaseNames(true);
-                // Parameter parser can handle null input
-                Map<String, String> params = paramParser.parse(cd, ';');
-                if (params.containsKey("filename")) {
-                    fileName = params.get("filename");
-                    if (fileName != null) {
-                        fileName = fileName.trim();
-                    } else {
-                        // Even if there is no value, the parameter is present,
-                        // so we return an empty file name rather than no file
-                        // name.
-                        fileName = "";
-                    }
-                }
-            }
+            fileName = cd.replaceFirst("(?i)^.*filename=\"?([^\"]+)\"?.*$", "$1");
+            //fileName = URLDecoder.decode(fileName, StandardCharsets.ISO_8859_1);
         }
         return fileName;
     }
