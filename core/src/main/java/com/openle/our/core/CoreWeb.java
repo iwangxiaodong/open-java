@@ -1,12 +1,12 @@
 package com.openle.our.core;
 
+import com.openle.our.core.io.IO;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Scanner;
 
 /**
  *
@@ -15,16 +15,24 @@ import java.util.Scanner;
 public class CoreWeb {
 
     public static String getHtmlByUrl(String url) throws MalformedURLException, IOException {
-        StringBuilder sb = new StringBuilder();
-        for (Scanner sc = new Scanner(new URL(url).openStream()); sc.hasNext();) {
-            sb.append(sc.nextLine()).append('\n');
-        }
-        return sb.toString();
+        return IO.inputStreamToString(new URL(url).openStream());
     }
 
-    // Or org.jsoup.parser.Parser.unescapeEntities(String string, boolean inAttribute)
-    // StringEscapeUtils.unescapeHtml(...) is deprecated
-    public static String unescapeHtml3(String str) {
+    //  还原用 org.jsoup.parser.Parser.unescapeEntities(String string, boolean inAttribute)
+    //  or StringEscapeUtils.unescapeHtml(...) is deprecated
+//    public static String htmlEscape(String s) {
+//        if (s != null) {
+//            // return org.apache.commons.lang3.StringEscapeUtils.escapeHtml4(s);
+//            //return ESAPIEncoder.getInstance().encodeForHTML(s);
+//            //JstlFunction.escapeXml(s);
+//            return com.google.common.html.HtmlEscapers.htmlEscaper().escape(s);
+//
+//        }
+//        return "";
+//    }
+    //
+    //  去除html标签
+    public static String stripHTML(String str) {
         try {
             Class<?> clazz = Class.forName("javax.swing.text.html.HTMLDocument");
             Constructor c = clazz.getConstructor();

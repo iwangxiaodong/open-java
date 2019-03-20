@@ -32,7 +32,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 javadoc {
     //  For <tt>
     exclude '**/IndentedPrintWriter.java'
-    exclude '**/ParameterParser.java'
+    //exclude '**/ParameterParser.java'
 }
 
 artifacts {
