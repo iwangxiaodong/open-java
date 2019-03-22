@@ -1,6 +1,5 @@
 package com.openle.our.core.io;
 
-//import org.apache.commons.io.FilenameUtils;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,26 +36,6 @@ public class IO {
         }
 
         return r;
-
-//        String result = null;
-//        File f = new File(path);
-//        if (f.exists()) {
-//            try {
-//                try (InputStreamReader isr = new InputStreamReader(new FileInputStream(f), "UTF-8"); BufferedReader br = new BufferedReader(isr)) {
-//                    String data;
-//                    while ((data = br.readLine()) != null) {
-//                        if (result == null) {
-//                            result = "";
-//                        }
-//                        result += data + newLine;
-//                    }
-//                }
-//            } catch (IOException e) {
-//                System.out.println(e.getMessage());
-//            }
-//        }
-//
-//        return result != null ? result.trim() : null;
     }
 
     public static void writeText(String path, String content) {
@@ -87,7 +67,7 @@ public class IO {
 
         try (InputStreamReader rd = new InputStreamReader(is,
                 charsetName != null ? charsetName : Charset.defaultCharset().name())) {
-            int c = 0;
+            int c;
             while ((c = rd.read()) != -1) {
                 temp.append((char) c);
             }
@@ -103,7 +83,7 @@ public class IO {
     //  保持输入流原始字符集信息
     public static String inputStreamToStringKeepOriginalCharset(InputStream is) {
         byte[] buffer = new byte[2048];
-        int readBytes = 0;
+        int readBytes;
         StringBuilder stringBuilder = new StringBuilder();
         try {
             while ((readBytes = is.read(buffer)) > 0) {
@@ -179,8 +159,9 @@ public class IO {
         }
     }
 
-    //    //todo 临时注释，后续研究是否要引入Commons IO
-//    public static String getExt(String fileName) {
-//        return FilenameUtils.getExtension(fileName);
-//    }
+    //  org.apache.commons.io.FilenameUtils.getExtension(fileName);
+    //  com.google.common.io.Files.getFileExtension("some.txt");
+    public static String getExt(String fileName) {
+        return Arrays.stream(fileName.split("\\.")).reduce((a, b) -> b).orElse(null);
+    }
 }

@@ -1,35 +1,35 @@
 package com.openle.our.core.io;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class Serializer {
+public class Serializer implements ObjectSerialization {
 
-    public static <T extends Serializable> byte[] objectToBytes(T obj) throws IOException {
-        byte[] bytes;
-        try (ByteArrayOutputStream b = new ByteArrayOutputStream();
-                ObjectOutputStream o = new ObjectOutputStream(b)) {
-
-            o.writeObject(obj);
-            bytes = b.toByteArray();
-
+    @Override
+    public byte[] dumpToByteArray(Object obj) {
+        try {
+            return ObjectIO.objectToBytes((Serializable) obj);
+        } catch (IOException ex) {
+            Logger.getLogger(Serializer.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return bytes;
+        return null;
     }
 
-    public static <T extends Serializable> T bytesToObject(byte[] bytes) throws IOException, ClassNotFoundException {
-        Object obj;
-        try (ByteArrayInputStream b = new ByteArrayInputStream(bytes);
-                ObjectInputStream o = new ObjectInputStream(b)) {
-
-            obj = o.readObject();
-
+    @Override
+    public Object load(byte[] bytes) {
+        try {
+            return ObjectIO.bytesToObject(bytes);
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(Serializer.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return (T) obj;
+        return null;
     }
+
+    @Override
+    public StreamMode streamMode() {
+        return StreamMode.BINARY;
+    }
+
 }
