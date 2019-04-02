@@ -16,16 +16,16 @@ public class OtherTest {
     @Test
     public void testSerializer() throws IOException, ClassNotFoundException {
         String eString = toString();
-        byte[] bytes = Serializer.objectToBytes(eString);
-        String obj = (String) Serializer.bytesToObject(bytes);
+        byte[] bytes = new Serializer().dumpToByteArray(eString);
+        String obj = (String) new Serializer().load(bytes);
         Assertions.assertEquals(eString, obj);
     }
 
     @Test
     public void testTupleSerializer1() throws IOException, ClassNotFoundException {
         Tuple3 t3 = new Tuple3(1, 2, 3);
-        byte[] bytes = Serializer.objectToBytes(t3);
-        Tuple3 newT3 = (Tuple3) Serializer.bytesToObject(bytes);
+        byte[] bytes = new Serializer().dumpToByteArray(t3);
+        Tuple3 newT3 = (Tuple3) new Serializer().load(bytes);
         Assertions.assertEquals(t3.v2, newT3.v2);
     }
 
