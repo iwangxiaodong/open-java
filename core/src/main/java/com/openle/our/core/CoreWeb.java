@@ -15,7 +15,7 @@ import java.net.URL;
 public class CoreWeb {
 
     public static String getHtmlByUrl(String url) throws MalformedURLException, IOException {
-        return IO.inputStreamToString(new URL(url).openStream());
+        return IO.inputStreamToString(new URL(url).openStream(), "UTF-8");
     }
 
     //  还原用 org.jsoup.parser.Parser.unescapeEntities(String string, boolean inAttribute)
