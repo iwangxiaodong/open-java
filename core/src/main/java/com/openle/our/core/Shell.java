@@ -11,6 +11,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
+//  Use SystemShell
+@java.lang.Deprecated
 public class Shell {
 
     private static String commandsPath = "";

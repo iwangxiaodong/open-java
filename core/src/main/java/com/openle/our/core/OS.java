@@ -1,6 +1,8 @@
 package com.openle.our.core;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class OS {
@@ -23,11 +25,15 @@ public class OS {
             return;
         }
 
-        if (key.isBlank()) {
+        //  jdk11 - key.isBlank()
+        if (key.trim().isEmpty()) {
             return;
         }
 
-        Map<String, String> newEnv = Map.of(key, value);
+        Map<String, String> map = new HashMap<>();
+        map.put(key, value);
+        //  jdk9 - Map.of(key, value)
+        Map<String, String> newEnv = Collections.unmodifiableMap(map);
 
         Class<?> processEnvironmentClass = null;
         try {
