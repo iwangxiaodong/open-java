@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 /**
  *
@@ -16,6 +17,38 @@ public class CoreWeb {
 
     public static String getHtmlByUrl(String url) throws MalformedURLException, IOException {
         return IO.inputStreamToString(new URL(url).openStream(), "UTF-8");
+    }
+
+    public final static String AUTHORIZATION_HEADER_NAME = "Authorization";
+
+    //  getBearerToken(request.getHeader(CoreWeb.AUTHORIZATION_HEADER_NAME));
+    //  返回null则无token
+    public static String getBearerToken(String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String[] auths = authHeader.trim().split("\\s+");
+            if (auths.length > 1) {
+                return auths[1];
+            }
+        }
+
+        return null;
+    }
+
+    public static String autoPostFormHTML(String actionURL) {
+        return autoPostFormHTML(actionURL, null);
+    }
+
+    public static String autoPostFormHTML(String actionURL, Map<String, String> map) {
+        String html = "<!DOCTYPE html><meta charset=\"UTF-8\"><title>Loading...</title>\n"
+                + "<body onload=\"document.forms[0].submit()\"><progress></progress>\n"
+                + "<form action=\"" + actionURL + "\" method=\"post\">\n";
+        if (map != null) {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                html += (entry.getValue() != null ? "<input type=\"hidden\" name=\"" + entry.getKey() + "\" value=\"" + entry.getValue() + "\" />\n" : "");
+            }
+        }
+        html += "</form></body>";
+        return html;
     }
 
     //  还原用 org.jsoup.parser.Parser.unescapeEntities(String string, boolean inAttribute)
