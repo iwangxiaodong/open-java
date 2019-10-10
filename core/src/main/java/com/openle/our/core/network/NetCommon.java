@@ -14,6 +14,36 @@ import java.util.stream.Collectors;
 
 public class NetCommon {
 
+    //  android高版本方兼容stream()等方法
+    public static String getIP() {
+
+        // 只关心IPv4（Inet4Address）地址，后续再考虑IPv6
+        List<NetworkInterface> ipList = NetCommon.getAllNetworkInterfaces().stream()
+                .filter(ni
+                        -> getIP(ni) != null
+                ).collect(Collectors.toList());
+        if (ipList.size() > 0) {
+            return getIP(ipList.get(0));
+        }
+
+        return null;
+    }
+
+    //  android高版本方兼容stream()等方法
+    public static String getIP(NetworkInterface ni) {
+        String ip = null;
+        if (ni != null) {
+            // 只关心IPv4（Inet4Address）地址，后续再考虑IPv6
+            List<InetAddress> ipList = Collections.list(ni.getInetAddresses()).stream()
+                    .filter(ia -> !ia.isLoopbackAddress() && !ia.isLinkLocalAddress() && ia instanceof Inet4Address)
+                    .collect(Collectors.toList());
+            if (ipList.size() > 0) {
+                return ipList.get(0).getHostAddress();
+            }
+        }
+        return ip;
+    }
+
     //  获取所有网络接口
     public static List<NetworkInterface> getAllNetworkInterfaces() {
         try {
@@ -43,6 +73,7 @@ public class NetCommon {
     //  获取默认以太网接口
     //  InetAddress.getLocalHost() windows中正常获取，linux中则要确保/etc/hosts中主机名对应IP不能是127.x.x.x网段
     //  windows Output：DESKTOP-6AFR096/192.168.1.106    //  Debian Output： debian/65.49.201.245
+    //  getHostAddress(getEthernetNetworkInterface())
     public static NetworkInterface getEthernetNetworkInterface() {
         NetworkInterface ni = null;
 
@@ -70,34 +101,6 @@ public class NetCommon {
             Logger.getLogger(NetCommon.class.getName()).log(Level.SEVERE, null, ex);
         }
         return mac;
-    }
-
-    public static String getHostAddress(NetworkInterface ni) {
-        String ip = null;
-        if (ni != null) {
-            // 只关心IPv4（Inet4Address）地址，后续再考虑IPv6
-            List<InetAddress> ipList = Collections.list(ni.getInetAddresses()).stream()
-                    .filter(ia -> !ia.isLoopbackAddress() && !ia.isLinkLocalAddress() && ia instanceof Inet4Address)
-                    .collect(Collectors.toList());
-            if (ipList.size() > 0) {
-                return ipList.get(0).getHostAddress();
-            }
-        }
-        return ip;
-    }
-
-    public static String getHostAddress() {
-
-        // 只关心IPv4（Inet4Address）地址，后续再考虑IPv6
-        List<NetworkInterface> ipList = NetCommon.getAllNetworkInterfaces().stream()
-                .filter(ni
-                        -> getHostAddress(ni) != null
-                ).collect(Collectors.toList());
-        if (ipList.size() > 0) {
-            return getHostAddress(ipList.get(0));
-        }
-
-        return null;
     }
 
     public static String macBytesToString(byte[] mac) {
