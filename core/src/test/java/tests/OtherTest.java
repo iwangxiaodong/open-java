@@ -46,7 +46,7 @@ public class OtherTest {
         NetworkInterface ni = NetCommon.getEthernetNetworkInterface();
         if (ni != null) {
             System.out.println(ni.getName());
-            System.out.println(NetCommon.getHostAddress(ni));
+            System.out.println(NetCommon.getIP(ni));
         }
 
         //        try {

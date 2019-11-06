@@ -21,7 +21,7 @@ task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the pro
 
 // wxd - wrapper放至common.gradle无效
 wrapper {
-    gradleVersion='6.0-20190918220850+0000'
+    gradleVersion='6.0-rc-3'
     //distributionUrl='file:///E:/gradle/gradle-4.4-all.zip'
     //distributionUrl='https://mirrors.cloud.tencent.com/gradle/gradle-5.4.1-bin.zip'
     //distributionUrl='http://download.openpkg.org/components/cache/gradle/gradle-5.6.2-bin.zip'
