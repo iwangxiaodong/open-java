@@ -86,10 +86,11 @@ bintray {
     }
 }
 
-task initProperty {    
-    System.setProperty("http.proxyHost", "127.0.0.1")
-    System.setProperty("http.proxyPort", "1080")
-    System.setProperty("https.proxyHost", "127.0.0.1")
-    System.setProperty("https.proxyPort", "1080")
-}
-tasks.bintrayUpload.dependsOn(initProperty)
+//  即使不调用bintrayUpload任务，依然会设置环境变量，故用的时候去掉注释
+//task initProperty {
+//    System.setProperty("http.proxyHost", "127.0.0.1")
+//    System.setProperty("http.proxyPort", "1080")
+//    System.setProperty("https.proxyHost", "127.0.0.1")
+//    System.setProperty("https.proxyPort", "1080")
+//}
+//tasks.bintrayUpload.dependsOn(initProperty)
