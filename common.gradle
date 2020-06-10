@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 String mavenGroupId = 'com.openle.module'
-String mavenVersion = '1.0.23'
+String mavenVersion = '1.0.24'
 
 // android编译器只支持到jdk8
 //sourceCompatibility = JavaVersion.VERSION_1_9
@@ -85,15 +85,6 @@ uploadArchives {
             
         //  or project.repositories["MavenLocal"].url
         repository(url: project.repositories.mavenLocal().url)
-        snapshotRepository(url: project.repositories.mavenLocal().url.resolve("../snapshots"))
-
-        //  覆盖上个repository;
-        repository(url: "dav:https://maven.openle.com/releases/") {
-            authentication(userName: "webdav", password: project.ext.pwd)
-        }
-        snapshotRepository(url: "dav:https://maven.openle.com/snapshots/") {
-            authentication(userName: "webdav", password: project.ext.pwd)
-        }
-        
+        snapshotRepository(url: project.repositories.mavenLocal().url.resolve("../snapshots"))        
     }
 }

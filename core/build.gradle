@@ -94,4 +94,5 @@ bintray {
 //    System.setProperty("https.proxyPort", "1080")
 //}
 //tasks.bintrayUpload.dependsOn(initProperty)
-tasks.bintrayUpload.dependsOn(jar,sourcesJar,javadocJar)
+//  uploadArchives仅用于生成POM，供bintrayUpload上传
+tasks.bintrayUpload.dependsOn(uploadArchives) //.dependsOn(jar,sourcesJar,javadocJar)
