@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id "com.jfrog.bintray" version "1.8.4"  //  for release
+    id "com.jfrog.bintray" version "1.8.5"  //  for release
     //    id 'signing'
 }
 
@@ -42,10 +42,10 @@ artifacts {
 
 dependencies {
     //  测试api
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
     
     //  测试引擎
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
 }
 
 //compileJava {
@@ -94,3 +94,4 @@ bintray {
 //    System.setProperty("https.proxyPort", "1080")
 //}
 //tasks.bintrayUpload.dependsOn(initProperty)
+tasks.bintrayUpload.dependsOn(jar,sourcesJar,javadocJar)
