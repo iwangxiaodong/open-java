@@ -8,10 +8,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 
-/**
- *
- * @author xiaodong
- */
+//  均为单int值转换 - 连续多值转换 可用 HexConverter
 public class ByteConverter {
 
 //    public static void main(String[] s) throws IOException, Exception {
@@ -31,7 +28,7 @@ public class ByteConverter {
     public static int bytesToInt(byte[] intBytes) throws IOException {
         ByteArrayInputStream bis = new ByteArrayInputStream(intBytes);
         int my_int;
-        try (ObjectInputStream ois = new ObjectInputStream(bis)) {
+        try ( ObjectInputStream ois = new ObjectInputStream(bis)) {
             my_int = ois.readInt();
         }
         return my_int;
@@ -39,8 +36,8 @@ public class ByteConverter {
 
     public static byte[] intToBytes(int myInt) throws IOException {
         byte[] int_bytes;
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            try (ObjectOutput out = new ObjectOutputStream(bos)) {
+        try ( ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            try ( ObjectOutput out = new ObjectOutputStream(bos)) {
                 out.writeInt(myInt);
             }
             int_bytes = bos.toByteArray();

@@ -4,25 +4,12 @@ plugins {
     //    id 'signing'
 }
 
+// android编译器只支持到jdk8
+sourceCompatibility =JavaVersion.VERSION_1_8
+
 test {
     useJUnitPlatform()
 }
-
-jar {     
-  
-    // 解决MethodHandle.invoke and MethodHandle.invokeExact are only supported starting with Android O (--min-api 26)
-    // 也可以在android配置中通过Proguard删除未使用的代码
-    //exclude('com/openle/module/core/lambda/LambdaFactory**')
-    
-    //exclude('my/package/excluded/**')
-    
-}
-
-// common.gradle已存在该task
-//task sourcesJar(type: Jar, dependsOn: classes) {
-//    classifier = 'sources'
-//    from sourceSets.main.java.srcDirs
-//}
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
@@ -48,18 +35,6 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
 }
 
-//compileJava {
-//    doFirst {
-//        options.compilerArgs = [
-//                    '--module-path', classpath.asPath,
-//        ]
-//        classpath = files()
-//    }
-//}
-
-//signing {
-//    sign configurations.archives
-//}
 
 //  注意 - 提交前应通过uploadArchives生成build/poms/目录
 // ./gradlew build bintrayUpload -PBINTRAY_API_KEY=myKey  //or 设定环境变量: export BINTRAY_API_KEY=myKey
@@ -96,3 +71,33 @@ bintray {
 //tasks.bintrayUpload.dependsOn(initProperty)
 //  uploadArchives仅用于生成POM，供bintrayUpload上传
 tasks.bintrayUpload.dependsOn(uploadArchives) //.dependsOn(jar,sourcesJar,javadocJar)
+
+
+jar {
+  
+    // 解决MethodHandle.invoke and MethodHandle.invokeExact are only supported starting with Android O (--min-api 26)
+    // 也可以在android配置中通过Proguard删除未使用的代码
+    //exclude('com/openle/module/core/lambda/LambdaFactory**')
+    
+    //exclude('my/package/excluded/**')
+    
+}
+
+// common.gradle已存在该task
+//task sourcesJar(type: Jar, dependsOn: classes) {
+//    classifier = 'sources'
+//    from sourceSets.main.java.srcDirs
+//}
+
+//compileJava {
+//    doFirst {
+//        options.compilerArgs = [
+//                    '--module-path', classpath.asPath,
+//        ]
+//        classpath = files()
+//    }
+//}
+
+//signing {
+//    sign configurations.archives
+//}
