@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 String mavenGroupId = 'com.openle.module'
-String mavenVersion = '1.0.26'
+String mavenVersion = '1.0.28'  //  上传时必须挂代理
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 

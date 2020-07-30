@@ -3,6 +3,7 @@ module com.openle.our.core {
     requires jdk.compiler;  // 考虑新增一个com.openle.our.jdk模块
 
     exports com.openle.our.core;
+    exports com.openle.our.core.collection;
     exports com.openle.our.core.converter;
     exports com.openle.our.core.io;
     exports com.openle.our.core.lambda;

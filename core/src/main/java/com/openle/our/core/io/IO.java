@@ -10,7 +10,6 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,7 +44,7 @@ public class IO {
             if (!f.exists()) {
                 f.createNewFile();
             }
-            try (OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream(f), "UTF-8"); BufferedWriter bw = new BufferedWriter(write)) {
+            try ( OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");  BufferedWriter bw = new BufferedWriter(write)) {
                 bw.write(content);
             }
         } catch (IOException e) {
@@ -66,7 +65,7 @@ public class IO {
 
         StringBuilder temp = new StringBuilder();
 
-        try (InputStreamReader rd = new InputStreamReader(is,
+        try ( InputStreamReader rd = new InputStreamReader(is,
                 charsetName != null ? charsetName : Charset.defaultCharset().name())) {
             int c;
             while ((c = rd.read()) != -1) {
@@ -122,24 +121,21 @@ public class IO {
     }
 
     // 强制删除文件/文件夹(含不为空的文件夹)
-    public static void deleteIfExistsWithNotEmpty(Path dir) throws IOException {
-        try {
-            Files.deleteIfExists(dir);
-        } catch (DirectoryNotEmptyException e) {
-            Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.delete(file);
-                    return FileVisitResult.CONTINUE;
-                }
+    public static void deleteFileOrNotEmptyDirectory(Path dir) throws IOException {
+        //  Files.deleteIfExists(zipPath);  //  非空目录会报DirectoryNotEmptyException
+        Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.deleteIfExists(file);
+                return super.visitFile(file, attrs);
+            }
 
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    Files.delete(dir);
-                    return super.postVisitDirectory(dir, exc);
-                }
-            });
-        }
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.deleteIfExists(dir);
+                return super.postVisitDirectory(dir, exc);
+            }
+        });
     }
 
     public static String fileSizeFormat(long size) {
