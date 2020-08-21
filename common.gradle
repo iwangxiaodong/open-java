@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 String mavenGroupId = 'com.openle.module'
-String mavenVersion = '1.0.28'  //  上传时必须挂代理
+String mavenVersion = '1.0.30'  //  上传时必须挂代理
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -44,12 +44,11 @@ task createFolders(description: 'Creates the source folders if they do not exist
 
 // for wxd
 
-
 // 兼容中文注释和排除module-info.java
 tasks.withType(Javadoc) {
     options.addStringOption('encoding', 'UTF-8')
     title =title+" - Open Source"
-    excludes = ['module-info.java','**/xxx/**']
+    excludes = ['module-info.java','**/patch/**','**/converter/DataUri.java']
     //failOnError = false
     //options.addStringOption('Xdoclint:none', '-quiet')
 }
