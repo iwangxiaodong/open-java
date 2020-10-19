@@ -23,20 +23,20 @@ import java.util.logging.Logger;
 
 public class IO {
 
-    public static String readText(String path) {
-
-        String r = null;
-        try {
-            //  or Files.lines(Paths.get("D:\\jd.txt")).forEach(System.out::println);
-            //  注意 - Files.readAllLines返回值不包括换行符
-            //  jdk11
-            r = Files.readString(Paths.get(path), StandardCharsets.UTF_8);
-        } catch (IOException ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return r;
-    }
+//    public static String readText(String path) {
+//
+//        String r = null;
+//        try {
+//            //  or Files.lines(Paths.get("D:\\jd.txt")).forEach(System.out::println);
+//            //  注意 - Files.readAllLines返回值不包括换行符
+//            //  jdk11
+//            r = Files.readString(Paths.get(path), StandardCharsets.UTF_8);
+//        } catch (IOException ex) {
+//            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        return r;
+//    }
 
     public static void writeText(String path, String content) {
         File f = new File(path);
