@@ -48,7 +48,8 @@ public class NetCommon {
     public static List<NetworkInterface> getAllNetworkInterfaces() {
         try {
             return Collections.list(NetworkInterface.getNetworkInterfaces());
-            // or return NetworkInterface.getNetworkInterfaces().asIterator();
+            //  NetworkInterface.networkInterfaces()
+            //  or return NetworkInterface.getNetworkInterfaces().asIterator();
         } catch (SocketException ex) {
             Logger.getLogger(NetCommon.class.getName()).log(Level.SEVERE, null, ex);
         }

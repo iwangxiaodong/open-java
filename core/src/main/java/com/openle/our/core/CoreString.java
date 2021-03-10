@@ -45,6 +45,12 @@ public class CoreString {
         return new String(charr);
     }
 
+    //  按固定长度和分隔符进行分拆
+    public static String splitter(String s, int fixedLength, CharSequence cs) {
+        String[] tokens = s.split("(?<=\\G.{" + fixedLength + "})");
+        return String.join(cs, tokens);
+    }
+
     public static String firstCharToLowerCase(String s) {
         if (s != null && !s.isEmpty()) {
             String c = s.substring(0, 1);

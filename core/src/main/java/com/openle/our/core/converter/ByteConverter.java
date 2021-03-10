@@ -53,20 +53,6 @@ public class ByteConverter {
         return byte_3;
     }
 
-    public static byte[] bigIntegerToBytes(BigInteger bigInteger) throws IOException {
-        byte[] array = bigInteger.toByteArray();
-        if (array[0] == 0) {
-            byte[] tmp = new byte[array.length - 1];
-            System.arraycopy(array, 1, tmp, 0, tmp.length);
-            array = tmp;
-        }
-        return array;
-    }
-
-    public static BigInteger bytesToBigInteger(byte[] bytes) {
-        return new BigInteger(1, bytes);
-    }
-
     public static byte[] copyOfRange(byte[] source, int from, int to) {
         byte[] range = new byte[to - from];
         System.arraycopy(source, from, range, 0, range.length);

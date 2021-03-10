@@ -65,6 +65,7 @@ public class CoreWeb {
 //    }
     //
     //  去除html标签
+    //  或 Jsoup.parse(content).text();
     public static String stripHTML(String str) {
         try {
             Class<?> clazz = Class.forName("javax.swing.text.html.HTMLDocument");

@@ -37,11 +37,11 @@ public class ObjectIO {
     //  commons-codec Base64似乎在Android报NoSuchMethodError
     public static <T extends Serializable> String objectToHexString(T obj) throws IOException {
         byte[] bytes = objectToBytes(obj);
-        return HexConverter.byteArrayToHex(bytes);
+        return HexConverter.bytesToHex(bytes);
     }
 
     public static <T extends Serializable> T hexStringToObject(String s) throws IOException, ClassNotFoundException {
-        byte[] bytes = HexConverter.hexToByteArray(s);
+        byte[] bytes = HexConverter.hexToBytes(s);
         Object obj = bytesToObject(bytes);
         return (T) obj;
     }

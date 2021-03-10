@@ -1,8 +1,5 @@
 package com.openle.our.core.converter;
 
-import java.math.BigInteger;
-
-
 public class Base32 {
 
     public static void main(String[] args) throws Exception {
@@ -15,7 +12,6 @@ public class Base32 {
 
 //        System.out.println(Base32.encode(ByteConvert.bigIntegerToBytes(new BigInteger("141107123559123"))));
 //        System.out.println(ByteConvert.bytesToBigInteger(Base32.decode("qbla76m22m")));
-
 //        //for guava com/google/common/io/BaseEncoding.java
 //        r = BaseEncoding.base32().omitPadding().lowerCase().encode("foo".getBytes("UTF-8"));
 //        System.out.println(r);
