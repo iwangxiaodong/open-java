@@ -6,13 +6,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.math.BigInteger;
 
 //  均为单int值转换 - 连续多值转换 可用 HexConverter
 public class ByteConverter {
 
 //    public static void main(String[] s) throws IOException, Exception {
-//        System.out.println("xxx");
+//        System.out.println("x");
 //        byte[] b = ByteConvert.intToBytes(40);
 //        int bb = ByteConvert.bytesToInt(b);
 //        System.out.println("bb - " + bb);

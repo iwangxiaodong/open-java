@@ -1,65 +1,69 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-String mavenGroupId = 'com.openle.module'
-String mavenVersion = '1.0.31'  //  上传时必须挂代理
+group = 'com.openle.module'
+version = '1.0.0-SNAPSHOT'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 repositories {
     mavenCentral();
-}
-
-String mavenArtifactId = name
-
-group = mavenGroupId
-version = mavenVersion
-
-task sourcesJar(type: Jar, dependsOn: classes, description: 'Creates a jar from the source files.') {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives jar
-    archives sourcesJar
-}
-
-configure(install.repositories.mavenInstaller) {
-    pom.project {
-        groupId = mavenGroupId
-        artifactId = mavenArtifactId
-        version = mavenVersion
-    }
-}
-
-task createFolders(description: 'Creates the source folders if they do not exist.') doLast {
-    sourceSets*.allSource*.srcDirs*.each { File srcDir ->
-        if (!srcDir.isDirectory()) {
-            println "Creating source folder: ${srcDir}"
-            srcDir.mkdirs()
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/iwangxiaodong/open-java")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
         }
     }
 }
+
+/*
+task sourcesJar(type: Jar, dependsOn: classes, description: 'Creates a jar from the source files.') {
+classifier = 'sources'
+from sourceSets.main.allSource
+}
+
+artifacts {
+archives jar
+archives sourcesJar
+}
+
+configure(install.repositories.mavenInstaller) {
+pom.project {
+groupId = group
+artifactId = "core"
+version = version
+}
+}
+
+task createFolders(description: 'Creates the source folders if they do not exist.') doLast {
+sourceSets*.allSource*.srcDirs*.each { File srcDir ->
+if (!srcDir.isDirectory()) {
+println "Creating source folder: ${srcDir}"
+srcDir.mkdirs()
+}
+}
+}
+ */
+
+
+
+
 
 // for wxd
 
 // 兼容中文注释和排除module-info.java
 tasks.withType(Javadoc) {
     options.addStringOption('encoding', 'UTF-8')
-    title =title+" - Open Source"
-    excludes = ['module-info.java','**/patch/**','**/converter/DataUri.java']
+    title = title + " - Open Source"
+    //excludes = ['**/patch/**/Base64.java','**/converter/DataUri.java']
+    //excludes = ['module-info.java','**/patch/**','**/converter/DataUri.java']
     //failOnError = false
     //options.addStringOption('Xdoclint:none', '-quiet')
 }
 
-configurations {
-    deployerJars
-}
 
-dependencies {
-    deployerJars group: 'org.apache.maven.wagon', name: 'wagon-webdav-jackrabbit', version: '3.4.1'
-}
 
 //task snapshot(dependsOn:assemble) << {
 //    uploadArchives.execute()
@@ -72,15 +76,32 @@ dependencies {
 //    }
 //}
 
-project.ext.pwd = project.hasProperty('WEBDAV_PASSWORD') ? project.property('WEBDAV_PASSWORD') : System.getenv('WEBDAV_PASSWORD')
+/*
+configurations {
+deployerJars
+}
+
+dependencies {
+deployerJars group: 'org.apache.maven.wagon', name: 'wagon-webdav-jackrabbit', version: '3.4.1'
+}
+project.ext.pwd = project.hasProperty('ORG_GRADLE_PROJECT_ourRepoPassword') ? project.property('ORG_GRADLE_PROJECT_ourRepoPassword') : System.getenv('ORG_GRADLE_PROJECT_ourRepoPassword')
 apply plugin: 'maven'
 uploadArchives {
-    repositories.mavenDeployer {
-        pom.artifactId = project.archivesBaseName.toLowerCase()
-        configuration = configurations.deployerJars
+repositories.mavenDeployer {
+pom.artifactId = project.archivesBaseName.toLowerCase()
+configuration = configurations.deployerJars
             
-        //  or project.repositories["MavenLocal"].url
-        repository(url: project.repositories.mavenLocal().url)
-        snapshotRepository(url: project.repositories.mavenLocal().url.resolve("../snapshots"))        
-    }
+//  or project.repositories["MavenLocal"].url
+//repository(url: project.repositories.mavenLocal().url)
+//snapshotRepository(url: project.repositories.mavenLocal().url.resolve("../snapshots"))   
+        
+repository(url: "dav:http://65.49.201.245:31380/releases/") {
+authentication(userName: "webdav", password: project.ext.pwd)
 }
+
+snapshotRepository(url: "dav:http://65.49.201.245:31380/releases/") {
+authentication(userName: "webdav", password: project.ext.pwd)
+}
+}
+}
+ */

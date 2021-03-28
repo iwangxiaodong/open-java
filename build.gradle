@@ -6,6 +6,7 @@ subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
+/*
 task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the projects.') {
     title = 'All modules'
     destinationDir = new File(project.buildDir, 'merged-javadoc')
@@ -18,6 +19,7 @@ task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the pro
         subprojects*.configurations*.compile*.copyRecursive({ !(it instanceof ProjectDependency); })*.resolve()
     }
 }
+*/
 
 // wxd - wrapper放至common.gradle无效
 wrapper {

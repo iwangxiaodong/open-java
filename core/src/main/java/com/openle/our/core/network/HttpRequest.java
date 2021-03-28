@@ -131,7 +131,7 @@ public class HttpRequest {
 
     }
 
-    // String cd = request.getPart("xxx").getHeader("Content-Disposition");
+    // String cd = request.getPart("x").getHeader("Content-Disposition");
     public static String getFileName(String cd) {
         String fileName = null;
         if (cd != null) {
