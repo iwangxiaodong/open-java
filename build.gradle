@@ -8,22 +8,22 @@ subprojects {
 
 /*
 task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the projects.') {
-    title = 'All modules'
-    destinationDir = new File(project.buildDir, 'merged-javadoc')
+title = 'All modules'
+destinationDir = new File(project.buildDir, 'merged-javadoc')
 
-    // Note: The closures below are executed lazily.
-    source {
-        subprojects*.sourceSets*.main*.allSource
-    }
-    classpath.from {
-        subprojects*.configurations*.compile*.copyRecursive({ !(it instanceof ProjectDependency); })*.resolve()
-    }
+// Note: The closures below are executed lazily.
+source {
+subprojects*.sourceSets*.main*.allSource
 }
-*/
+classpath.from {
+subprojects*.configurations*.compile*.copyRecursive({ !(it instanceof ProjectDependency); })*.resolve()
+}
+}
+ */
 
 // wxd - wrapper放至common.gradle无效
 wrapper {
-    gradleVersion='6.8.3'
+    gradleVersion='7.0'
     //distributionUrl='file:///E:/gradle/gradle-4.4-all.zip'
     //distributionUrl='https://mirrors.cloud.tencent.com/gradle/gradle-5.4.1-bin.zip'
     //distributionUrl='http://download.openpkg.org/components/cache/gradle/gradle-5.6.2-bin.zip'

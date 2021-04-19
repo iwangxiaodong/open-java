@@ -1,5 +1,5 @@
 apply plugin: 'java'
-apply plugin: 'maven'
+//apply plugin: 'maven'
 
 group = 'com.openle.module'
 version = '1.0.0-SNAPSHOT'

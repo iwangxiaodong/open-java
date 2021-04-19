@@ -10,7 +10,21 @@ compileJava {
     //  会覆盖sourceCompatibility
     options.release = 11
 }
-
+//  仅用于解决JDK16+Gradle7.0RC2报deprecated compileConfigurationName
+sourceSets {
+    main{
+        ext.compileConfigurationName = null
+        ext.runtimeConfigurationName = null
+    }
+    test{
+        ext.compileConfigurationName = null
+        ext.runtimeConfigurationName = null
+    }    
+    javaSecond{
+        ext.compileConfigurationName = null
+        ext.runtimeConfigurationName = null
+    }
+}
 sourceSets {
     javaSecond {
         java {

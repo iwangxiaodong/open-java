@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -18,6 +19,39 @@ import java.util.zip.ZipOutputStream;
  */
 public class ZipClass {
 
+    //  Java原生GZIP压缩类 - 测试成功后删除以下注释原代码
+    public static void gzipFile(File srcFile, File desFile) {
+        try ( var fis = new FileInputStream(srcFile);  var fos = new FileOutputStream(desFile);  var gzos = new GZIPOutputStream(fos)) {
+            fis.transferTo(gzos);
+            gzos.flush();
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+    }
+//    public static void gzipFile(File srcFile, File desFile) {
+//        FileInputStream fis;
+//        FileOutputStream fos;
+//        GZIPOutputStream gzos;
+//        final int MAX_BYTE = 1024 * 1000;
+//        int len = 0;
+//        byte[] b = new byte[MAX_BYTE];
+//
+//        try {
+//            fis = new FileInputStream(srcFile);
+//            fos = new FileOutputStream(desFile);
+//            gzos = new GZIPOutputStream(fos);
+//            while ((len = fis.read(b)) != -1) {
+//                gzos.write(b, 0, len);
+//            }
+//            gzos.flush();
+//            gzos.close();
+//            fos.close();
+//            fis.close();
+//        } catch (IOException ex) {
+//            System.err.println(ex);
+//        }
+//    }
+
     /**
      * zip文件压缩
      *
@@ -28,8 +62,8 @@ public class ZipClass {
     public static void ZipCompress(String inputFile, String outputFile) throws Exception {
         //创建缓冲输出流
         try ( //创建zip输出流
-                ZipOutputStream out = new ZipOutputStream(new FileOutputStream(outputFile)); //创建缓冲输出流
-                BufferedOutputStream bos = new BufferedOutputStream(out)) {
+                 ZipOutputStream out = new ZipOutputStream(new FileOutputStream(outputFile)); //创建缓冲输出流
+                  BufferedOutputStream bos = new BufferedOutputStream(out)) {
             File input = new File(inputFile);
             compress(out, bos, input, null);
         }
@@ -57,7 +91,7 @@ public class ZipClass {
         } else//如果不是目录（文件夹），即为文件，则先写入目录进入点，之后将文件写入zip文件中
         {
             out.putNextEntry(new ZipEntry(name));
-            try (FileInputStream fos = new FileInputStream(input); BufferedInputStream bis = new BufferedInputStream(fos)) {
+            try ( FileInputStream fos = new FileInputStream(input);  BufferedInputStream bis = new BufferedInputStream(fos)) {
                 int len = -1;
                 //将源文件写入到zip文件中
                 byte[] buf = new byte[1024];
@@ -92,7 +126,7 @@ public class ZipClass {
                 if (!file.exists()) {
                     new File(file.getParent()).mkdirs();//创建此文件的上级目录
                 }
-                try (OutputStream out = new FileOutputStream(file); BufferedOutputStream bos = new BufferedOutputStream(out)) {
+                try ( OutputStream out = new FileOutputStream(file);  BufferedOutputStream bos = new BufferedOutputStream(out)) {
                     int len = -1;
                     byte[] buf = new byte[1024];
                     while ((len = zIn.read(buf)) != -1) {
