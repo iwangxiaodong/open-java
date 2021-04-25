@@ -7,50 +7,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
+ * TODO - 逐渐重构至ArchiveSupport类中
  * http://www.xckey.com/1090.html#crayon-5edf5154f0ac7358452683
  *
  * @author xiaodong
  */
 public class ZipClass {
-
-    //  Java原生GZIP压缩类 - 测试成功后删除以下注释原代码
-    public static void gzipFile(File srcFile, File desFile) {
-        try ( var fis = new FileInputStream(srcFile);  var fos = new FileOutputStream(desFile);  var gzos = new GZIPOutputStream(fos)) {
-            fis.transferTo(gzos);
-            gzos.flush();
-        } catch (IOException ex) {
-            System.err.println(ex);
-        }
-    }
-//    public static void gzipFile(File srcFile, File desFile) {
-//        FileInputStream fis;
-//        FileOutputStream fos;
-//        GZIPOutputStream gzos;
-//        final int MAX_BYTE = 1024 * 1000;
-//        int len = 0;
-//        byte[] b = new byte[MAX_BYTE];
-//
-//        try {
-//            fis = new FileInputStream(srcFile);
-//            fos = new FileOutputStream(desFile);
-//            gzos = new GZIPOutputStream(fos);
-//            while ((len = fis.read(b)) != -1) {
-//                gzos.write(b, 0, len);
-//            }
-//            gzos.flush();
-//            gzos.close();
-//            fos.close();
-//            fis.close();
-//        } catch (IOException ex) {
-//            System.err.println(ex);
-//        }
-//    }
 
     /**
      * zip文件压缩
@@ -60,10 +27,7 @@ public class ZipClass {
      * @throws java.lang.Exception ...
      */
     public static void ZipCompress(String inputFile, String outputFile) throws Exception {
-        //创建缓冲输出流
-        try ( //创建zip输出流
-                 ZipOutputStream out = new ZipOutputStream(new FileOutputStream(outputFile)); //创建缓冲输出流
-                  BufferedOutputStream bos = new BufferedOutputStream(out)) {
+        try ( ZipOutputStream out = new ZipOutputStream(new FileOutputStream(outputFile));  BufferedOutputStream bos = new BufferedOutputStream(out)) {
             File input = new File(inputFile);
             compress(out, bos, input, null);
         }
