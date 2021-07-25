@@ -16,6 +16,7 @@ public class CoreDateTime {
                 ZoneOffset.systemDefault());
     }
 
+    //  设置时区 - instant.atOffset(ZoneOffset.ofHours(8))
     public static Instant getInstantByTimeBasedUUID(UUID uuid) {
         return Instant.ofEpochMilli((uuid.timestamp() - 122192928000000000L) / 10000);
     }

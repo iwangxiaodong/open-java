@@ -2,8 +2,6 @@ package com.openle.our.core.io;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Serializer implements ObjectSerialization {
 
@@ -12,7 +10,7 @@ public class Serializer implements ObjectSerialization {
         try {
             return ObjectIO.objectToBytes((Serializable) obj);
         } catch (IOException ex) {
-            Logger.getLogger(Serializer.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
         return null;
     }
@@ -22,7 +20,7 @@ public class Serializer implements ObjectSerialization {
         try {
             return ObjectIO.bytesToObject(bytes);
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(Serializer.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
         return null;
     }

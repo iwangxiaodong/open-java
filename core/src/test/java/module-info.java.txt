@@ -1,0 +1,11 @@
+//  JUnit引擎用到反射时应声明为open模块儿
+module com.openle.our.core.test {
+    requires com.openle.our.core;
+
+    requires java.logging;
+
+    exports tests;
+
+    // for test
+    requires org.junit.jupiter.api;
+}

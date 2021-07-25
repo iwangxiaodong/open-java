@@ -1,9 +1,15 @@
-import org.gradle.api.artifacts.*
+//import org.gradle.api.artifacts.*
 
 apply plugin: 'base' // To add "clean" task to the root project.
 
+//apply plugin: 'java'
+
 subprojects {
-    apply from: rootProject.file('common.gradle')
+    group = 'com.openle.module'
+    version = '1.0.0-SNAPSHOT'
+    repositories {
+        mavenCentral()
+    }
 }
 
 /*
@@ -23,7 +29,7 @@ subprojects*.configurations*.compile*.copyRecursive({ !(it instanceof ProjectDep
 
 // wxd - wrapper放至common.gradle无效
 wrapper {
-    gradleVersion='7.0'
+    gradleVersion='7.1.1'
     //distributionUrl='file:///E:/gradle/gradle-4.4-all.zip'
     //distributionUrl='https://mirrors.cloud.tencent.com/gradle/gradle-5.4.1-bin.zip'
     //distributionUrl='http://download.openpkg.org/components/cache/gradle/gradle-5.6.2-bin.zip'

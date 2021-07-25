@@ -8,18 +8,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class IO {
 
@@ -37,7 +35,6 @@ public class IO {
 //
 //        return r;
 //    }
-
     public static void writeText(String path, String content) {
         File f = new File(path);
         try {
@@ -72,9 +69,9 @@ public class IO {
                 temp.append((char) c);
             }
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         } catch (IOException ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
 
         return temp.toString();
@@ -90,7 +87,7 @@ public class IO {
                 stringBuilder.append(new String(buffer, 0, readBytes));
             }
         } catch (IOException ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
         return null;
     }

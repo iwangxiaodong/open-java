@@ -3,7 +3,6 @@ package com.openle.our.core;
 import com.openle.our.core.io.IO;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 /**
  * @author xiaodong
@@ -59,8 +58,8 @@ public class SystemShell {
                     System.err.println("error code is:" + exitValue);
                     return null;
                 }
-            } catch (InterruptedException e) {
-                Logger.getGlobal().severe(e.toString());
+            } catch (InterruptedException ex) {
+                System.err.println(ex);
             }
 
             return output;

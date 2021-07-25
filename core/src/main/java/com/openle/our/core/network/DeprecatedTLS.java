@@ -5,8 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -28,7 +26,7 @@ public class DeprecatedTLS {
             sc.init(null, new TrustManager[]{new MyTrustManager()},
                     new SecureRandom());
         } catch (NoSuchAlgorithmException | KeyManagementException ex) {
-            Logger.getLogger(DeprecatedTLS.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
         if (sc != null) {
             HttpsURLConnection

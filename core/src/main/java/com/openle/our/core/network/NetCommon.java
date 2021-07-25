@@ -8,8 +8,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class NetCommon {
@@ -51,7 +49,7 @@ public class NetCommon {
             //  NetworkInterface.networkInterfaces()
             //  or return NetworkInterface.getNetworkInterfaces().asIterator();
         } catch (SocketException ex) {
-            Logger.getLogger(NetCommon.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
         return null;
     }
@@ -63,7 +61,7 @@ public class NetCommon {
             try {
                 return ni.getHardwareAddress() != null;
             } catch (SocketException ex) {
-                Logger.getLogger(NetCommon.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex);
             }
             return false;
         }).collect(Collectors.toList());
@@ -86,7 +84,7 @@ public class NetCommon {
                 ni = NetworkInterface.getByName("eth0");
             }
         } catch (UnknownHostException | SocketException ex) {
-            Logger.getLogger(NetCommon.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
         return ni;
     }
@@ -99,7 +97,7 @@ public class NetCommon {
                 mac = macBytesToString(ni.getHardwareAddress());
             }
         } catch (SocketException ex) {
-            Logger.getLogger(NetCommon.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
         return mac;
     }

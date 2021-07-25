@@ -2,7 +2,6 @@ package com.openle.our.core;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.logging.Logger;
 
 /**
  *
@@ -22,7 +21,7 @@ public class CoreData {
         if (str == null) {
             return null;
         }
-        return str.replace("'", "''")   //  StringEscapeUtils.escapeSql(...)实现仅仅替换单引号至双引号而已。
+        return str.replace("'", "''") //  StringEscapeUtils.escapeSql(...)实现仅仅替换单引号至双引号而已。
                 .replace("\\", "\\\\").replace("\r", "\\r").replace("\n", "\\n");
     }
 
@@ -41,7 +40,7 @@ public class CoreData {
                     //System.out.println("Table Name = " + obj);
                     tableName = obj.toString();
                 } catch (java.lang.ReflectiveOperationException ex) {
-                    Logger.getGlobal().severe(ex.toString());
+                    System.err.println(ex);
                 }
             }
         }
