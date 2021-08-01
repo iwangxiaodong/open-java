@@ -1,4 +1,4 @@
-package com.openle.our.core;
+package com.openle.our.core.collection;
 
 import java.util.Arrays;
 
