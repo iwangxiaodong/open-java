@@ -1,6 +1,6 @@
 package com.openle.our.core.network;
 
-import com.openle.our.core.OS;
+import com.openle.our.core.os.OS;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;

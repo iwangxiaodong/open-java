@@ -1,6 +1,6 @@
 package tests;
 
-import com.openle.our.core.SystemShell;
+import com.openle.our.core.os.SystemShell;
 import org.junit.jupiter.api.Test;
 
 /**
