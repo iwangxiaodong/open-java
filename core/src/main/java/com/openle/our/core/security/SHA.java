@@ -1,11 +1,11 @@
 package com.openle.our.core.security;
 
-//SHA:安全散列算法,又称信息摘要,不可逆
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+//SHA-256:安全散列算法,又称信息摘要,不可逆; SHA-1已废弃
 public class SHA {
 
     // SHA.digest("a".getBytes("UTF-8"));

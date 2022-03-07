@@ -65,7 +65,7 @@ public class CoreWeb {
 //    }
     //
     //  去除html标签
-    //  或 Jsoup.parse(content).text();
+    //  或 Jsoup.parse(htmlString).text();
     public static String stripHTML(String str) {
         try {
             Class<?> clazz = Class.forName("javax.swing.text.html.HTMLDocument");
@@ -96,10 +96,16 @@ public class CoreWeb {
 //        HTMLDocument doc = new HTMLDocument();
 //        try {
 //            new HTMLEditorKit().read(new StringReader("<html><body>" + str), doc, 0);
-//            return doc.getText(1, doc.getLength());
+//            return doc.getText(0, doc.getLength());
 //        } catch (IOException | BadLocationException ex) {
 //            System.out.println(ex);
 //        }
         return null;
+    }
+
+    public static String mutilineTextToSingleLine(String str) {
+        //  多行并单行且只间隔一个空格 - 先把连续换行合并为单个换行，然后把单个换行替换为空格。
+        String text = str.replaceAll("(\n)+", "\n").replaceAll("\n", " ").trim();
+        return text;
     }
 }

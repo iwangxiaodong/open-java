@@ -5,6 +5,9 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Formatter;
 
+//  todo - JDK17+ java.util.HexFormat
+//  https://www.baeldung.com/java-hexformat
+@Deprecated(since = "17")
 public class HexConverter {
 
     public static void main(String[] s) {

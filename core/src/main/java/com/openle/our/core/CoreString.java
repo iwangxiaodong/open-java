@@ -51,6 +51,14 @@ public class CoreString {
         return String.join(cs, tokens);
     }
 
+    public static boolean firstCharIsLetterOrDigit(char c) {
+        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
+    }
+
+    public static boolean firstCharIsLetter(char c) {
+        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+    }
+
     public static String firstCharToLowerCase(String s) {
         if (s != null && !s.isEmpty()) {
             String c = s.substring(0, 1);

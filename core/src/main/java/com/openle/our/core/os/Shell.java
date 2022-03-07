@@ -27,7 +27,7 @@ package com.openle.our.core.os;
 //        }
 //    }
 //
-//    //todo 未测试
+//    // 未测试
 //    public static boolean isRootShell() {
 //        String r = Shell.runCommandAndReturn("id").v2;
 //        System.out.println("a:" + r);

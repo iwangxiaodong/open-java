@@ -13,6 +13,7 @@ import java.util.zip.GZIPOutputStream;
 public class ArchiveSupport {
 
     //  Java原生GZIP压缩类 - 测试成功后删除以下注释原代码
+    //  gzipSingleFile(new File("x.txt"),new File("x.gz"));
     public static void gzipSingleFile(File srcFile, File desFile) {
         try ( var fis = new FileInputStream(srcFile);  var fos = new FileOutputStream(desFile);  var gzos = new GZIPOutputStream(fos)) {
             fis.transferTo(gzos);

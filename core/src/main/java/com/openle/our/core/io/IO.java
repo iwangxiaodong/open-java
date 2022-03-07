@@ -8,16 +8,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 import java.nio.charset.Charset;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class IO {
 
@@ -30,7 +31,6 @@ public class IO {
 //            //  jdk11
 //            r = Files.readString(Paths.get(path), StandardCharsets.UTF_8);
 //        } catch (IOException ex) {
-//            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //
 //        return r;
@@ -157,5 +157,28 @@ public class IO {
     //  com.google.common.io.Files.getFileExtension("some.txt");
     public static String getExt(String fileName) {
         return Arrays.stream(fileName.split("\\.")).reduce((a, b) -> b).orElse(null);
+    }
+
+    //  source - https://github.com/apache/ant/blob/master/src/main/org/apache/tools/ant/util/PermissionUtils.java
+    //  java.nio.file.Files.setPosixFilePermissions(path,PermissionUtils.permissionsFromMode(entry.getUnixMode()));
+    public static Set<PosixFilePermission> permissionsFromMode(int mode) {
+        Set<PosixFilePermission> permissions = EnumSet.noneOf(PosixFilePermission.class);
+        addPermissions(permissions, "OTHERS", mode);
+        addPermissions(permissions, "GROUP", mode >> 3);
+        addPermissions(permissions, "OWNER", mode >> 6);
+        return permissions;
+    }
+
+    private static void addPermissions(Set<PosixFilePermission> permissions,
+            String prefix, long mode) {
+        if ((mode & 1) == 1) {
+            permissions.add(PosixFilePermission.valueOf(prefix + "_EXECUTE"));
+        }
+        if ((mode & 2) == 2) {
+            permissions.add(PosixFilePermission.valueOf(prefix + "_WRITE"));
+        }
+        if ((mode & 4) == 4) {
+            permissions.add(PosixFilePermission.valueOf(prefix + "_READ"));
+        }
     }
 }

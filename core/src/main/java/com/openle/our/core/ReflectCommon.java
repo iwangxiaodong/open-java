@@ -1,12 +1,38 @@
-//package com.openle.our.core;
+package com.openle.our.core;
+
+public class ReflectCommon {
+
+    //  等Android minsdk -> 26时再放开该类注释
+    public static final class FieldHelper {
+//        private static final VarHandle MODIFIERS;
 //
-//import java.lang.reflect.Field;
-//import java.lang.reflect.Method;
-//import java.lang.reflect.ParameterizedType;
-//import java.lang.reflect.Type;
+//        static {
+////        Module java_base = Field.class.getModule(), unnamed = FieldHelper.class.getModule();
+////        java_base.addOpens("java.lang.reflect", unnamed);
+////        java_base.addOpens("java.util", unnamed);
+//            try {
+//                var lookup = MethodHandles.privateLookupIn(Field.class, MethodHandles.lookup());
+//                MODIFIERS = lookup.findVarHandle(Field.class, "modifiers", int.class);
+//            } catch (IllegalAccessException | NoSuchFieldException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//        }
 //
-//// MethodHandle比getMethod调用快很多
-//public class ReflectCommon {
+//        /*
+//        //  ['--add-opens','java.base/java.lang.reflect=ALL-UNNAMED']
+//        FieldHelper.makeNonFinal(field);
+//        field.setAccessible(true);
+//        field.set(null, true);
+//         */
+//        //  亲测暂不支持graalvm 22.0.0.2和quarkus；JVM模式是支持的
+//        public static void makeNonFinal(Field field) {
+//            int mods = field.getModifiers();
+//            if (Modifier.isFinal(mods)) {
+//                MODIFIERS.set(field, mods & ~Modifier.FINAL);
+//            }
+//        }
+    }
+
 //
 //    public static Object getEntityProperty(Object obj, String fieldName) {
 //        Object result = null;
@@ -125,4 +151,4 @@
 //
 //        return printString;
 //    }
-//}
+}

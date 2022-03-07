@@ -18,7 +18,7 @@ public class ShortcutLink {
         String fileName = "C:\\Program Files\\"; // exe文件所在父目录
         var hashMap = new HashMap<String, String>();
         hashMap.put("LAN-IM.lnk", "LAN IM\\局域网聊天.exe");
-        //hashMap.put("x.lnk", "xx\\xxx.exe");
+        //hashMap.put("x.lnk", "x\\x.exe");
         var shortcut = new ShortcutLink(fileName, hashMap);
         shortcut.start(ShortcutLink.startup);
     }
