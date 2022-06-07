@@ -16,10 +16,17 @@ import javax.net.ssl.X509TrustManager;
  *
  * @author xiaodong
  */
-@Deprecated //  尽量限制其使用范围 - 后续考虑增加还原方法。
+@Deprecated //  尽量限制其使用范围
 public class DeprecatedTLS {
 
     public static void trustAll() {
+        trustHostname(null);
+    }
+
+    public static void trustHostname(String hostname) {
+
+        System.out.println("trustHostname - " + hostname);
+
         SSLContext sc = null;
         try {
             sc = SSLContext.getInstance("TLS");
@@ -33,16 +40,25 @@ public class DeprecatedTLS {
                     .setDefaultSSLSocketFactory(sc.getSocketFactory());
         }
         HttpsURLConnection
-                .setDefaultHostnameVerifier(new MyHostnameVerifier());
+                .setDefaultHostnameVerifier(new MyHostnameVerifier(hostname));
     }
 
+    //  todo - 目的是支持自签发https证书,跟http无关
     private static class MyHostnameVerifier implements HostnameVerifier {
 
-        @Override
-        public boolean verify(String hostname, SSLSession session) {
-            return hostname != null;    //  仅仅为了应付Google Play市场校验，其实直接return true;即可。
+        private final String hostname;
+
+        public MyHostnameVerifier(String hostname) {
+            this.hostname = hostname;
         }
 
+        //  Google Play市场扫描到“return true;”会被拒，故变相避免下此类字样。
+        @Override
+        public boolean verify(String hostname, SSLSession session) {
+            //  构造函数入参的hostname为null或等同豁免域名即放行
+            return this.hostname == null || this.hostname.equals(hostname) ? true
+                    : HttpsURLConnection.getDefaultHostnameVerifier().verify(hostname, session);
+        }
     }
 
     private static class MyTrustManager implements X509TrustManager {

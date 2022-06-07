@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -17,10 +18,32 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.Set;
 
 public class IO {
+
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
+
+    //  Source from - InputStream.transferTo(OutputStream out)
+    //  API 32+ use InputStream.transferTo
+    /*
+            var out = new ByteArrayOutputStream();
+            transferTo(conn.getInputStream(), out);
+            content = out.toString();
+    */
+    public static long transferTo(InputStream in, OutputStream out) throws IOException {
+        Objects.requireNonNull(out, "out");
+        long transferred = 0;
+        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        int read;
+        while ((read = in.read(buffer, 0, DEFAULT_BUFFER_SIZE)) >= 0) {
+            out.write(buffer, 0, read);
+            transferred += read;
+        }
+        return transferred;
+    }
 
 //    public static String readText(String path) {
 //

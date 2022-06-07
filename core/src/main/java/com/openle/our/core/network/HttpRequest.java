@@ -1,11 +1,13 @@
 package com.openle.our.core.network;
 
 import com.openle.our.core.io.IO;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 public class HttpRequest {
 
@@ -55,7 +57,7 @@ public class HttpRequest {
             conn.connect();
 
             if (params != null) {
-                try (DataOutputStream dos = new DataOutputStream(conn.getOutputStream())) {
+                try ( DataOutputStream dos = new DataOutputStream(conn.getOutputStream())) {
                     dos.write(params.getBytes());
                     dos.flush();
                 }
@@ -74,62 +76,101 @@ public class HttpRequest {
         return content;
     }
 
-    public static String httpGetWithoutCA(String url) {
-        DeprecatedTLS.trustAll();
-        return get(url);
+    public static Map.Entry<String, String> requestHttps(String urlString) {
+        return requestHttps(urlString, true);
     }
 
-    public static ReturnStringAndError requestWithoutCA(String urlString) {
-
-        DeprecatedTLS.trustAll();
-
-        ReturnStringAndError r = new ReturnStringAndError();
-
+    //  API 30+ use Map.Entry
+    public static Map.Entry<String, String> requestHttps(String urlString, boolean useCaches) {
+        String content = null, error = null;
         HttpURLConnection conn = null;
         try {
             URL url = new URL(urlString);
-            conn = (HttpURLConnection) url
-                    .openConnection();
-            String content = IO.inputStreamToString(conn.getInputStream());
-
-            r.setString(content);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setUseCaches(useCaches);
+            var out = new ByteArrayOutputStream();
+            IO.transferTo(conn.getInputStream(), out);
+            content = out.toString();
             System.out.println("Contents of get request ends");
 
         } catch (MalformedURLException e) {
-            r.setError(e.getMessage());
+            error = e.getMessage();
         } catch (IOException e) {
-            r.setError(e.getMessage());
+            error = e.getMessage();
         } finally {
             if (conn != null) {
                 conn.disconnect();
             }
         }
-
-        return r;
+        return Map.entry(content, error);
     }
 
-    public static class ReturnStringAndError {
-
-        private String string;
-        private String error;
-
-        public String getError() {
-            return error;
+    public static String requestGetHttpsCustomCA(String urlString) {
+        //DeprecatedTLS.trustAll();
+        try {
+            var url = new URL(urlString);
+            if ("https".equals(url.getProtocol())) {
+                DeprecatedTLS.trustHostname(url.getHost());
+            }
+        } catch (MalformedURLException ex) {
+            System.err.println(ex);
         }
 
-        public void setError(String error) {
-            this.error = error;
-        }
-
-        public String getString() {
-            return string;
-        }
-
-        public void setString(String string) {
-            this.string = string;
-        }
-
+        return get(urlString);
     }
+
+//    public static ReturnStringAndError requestHttpsCustomCA(String urlString) {
+//
+//        ReturnStringAndError r = new ReturnStringAndError();
+//        HttpURLConnection conn = null;
+//        try {
+//            URL url = new URL(urlString);
+//            if ("https".equals(url.getProtocol())) {
+//                DeprecatedTLS.trustHostname(url.getHost());
+//            }
+//
+//            conn = (HttpURLConnection) url
+//                    .openConnection();
+//            String content = IO.inputStreamToString(conn.getInputStream());
+//
+//            r.setString(content);
+//            System.out.println("Contents of get request ends");
+//
+//        } catch (MalformedURLException e) {
+//            r.setError(e.getMessage());
+//        } catch (IOException e) {
+//            r.setError(e.getMessage());
+//        } finally {
+//            if (conn != null) {
+//                conn.disconnect();
+//            }
+//        }
+//
+//        return r;
+//    }
+//
+//    public static class ReturnStringAndError {
+//
+//        private String string;
+//        private String error;
+//
+//        public String getError() {
+//            return error;
+//        }
+//
+//        public void setError(String error) {
+//            this.error = error;
+//        }
+//
+//        public String getString() {
+//            return string;
+//        }
+//
+//        public void setString(String string) {
+//            this.string = string;
+//        }
+//
+//    }
 
     // String cd = request.getPart("x").getHeader("Content-Disposition");
     public static String getFileName(String cd) {

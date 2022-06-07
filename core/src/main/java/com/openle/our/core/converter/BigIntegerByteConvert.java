@@ -18,6 +18,10 @@ import java.util.Arrays;
 public class BigIntegerByteConvert {
 
     public static void main(String[] args) {
+
+        var r = new BigInteger("package.name".getBytes());
+        System.out.println(r);  //  34780056399595376503295143269
+
         SecureRandom random = new SecureRandom();
         byte[] key = new byte[16];
         random.nextBytes(key);

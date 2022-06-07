@@ -12,7 +12,7 @@ subprojects {
 
 // wxd - wrapper放至common.gradle无效
 wrapper {
-    gradleVersion='7.3.2'
+    gradleVersion='7.4.2'
     //distributionUrl='file:///E:/gradle/gradle-4.4-all.zip'
     //distributionUrl='https://mirrors.cloud.tencent.com/gradle/gradle-5.4.1-bin.zip'
     //distributionUrl='http://download.openpkg.org/components/cache/gradle/gradle-5.6.2-bin.zip'

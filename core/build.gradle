@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id("maven-publish")
+    id "com.google.cloud.artifactregistry.gradle-plugin" version "2.1.5"
 
     //    id 'signing'
 }
@@ -52,16 +53,27 @@ java {
 publishing {
     repositories {
         maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/iwangxiaodong/open-java")
+            url "artifactregistry://asia-maven.pkg.dev/project-161922/maven-public-snapshot"
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+                username = "_json_key"  //  key.json内容直转为base64后用_json_key_base64
+                password = file('../../project-161922-8ad030ce3d3e.json').text
+            }
+            authentication {
+                basic(BasicAuthentication)
             }
         }
+        /*
+        maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/iwangxiaodong/open-java")
+        credentials {
+        username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+        password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+        }
+        }*/
     }
     publications {
-        gpr(MavenPublication) {
+        mainRelease(MavenPublication) {
             from(components.java)
             //groupId = group
             //artifactId = name
