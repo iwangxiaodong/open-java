@@ -8,7 +8,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
+import java.util.UUID;
 
+//   todo - post + form-data 暂只有execute(...)才能使用。
+/*
+    HttpRequest.execute("https://example.com", "", "POST",
+        "multipart/form-data; boundary=any-string", Map.of("k", "v"));
+ */
 public class HttpRequest {
 
     public static String get(String url) {
@@ -20,7 +26,7 @@ public class HttpRequest {
     }
 
     public static String get(String url, String params, String contentType) {
-        return execute(url, params, "GET", contentType);
+        return execute(url, params, "GET", contentType, null);  //  todo - formDataMap暂设null
     }
 
     public static String post(String url) {
@@ -32,10 +38,12 @@ public class HttpRequest {
     }
 
     public static String post(String url, String params, String contentType) {
-        return execute(url, params, "POST", contentType);
+        return execute(url, params, "POST", contentType, null);  //  todo - formDataMap暂设null
     }
 
-    public static String execute(String url, String params, String method, String contentType) {
+    //  post + formDataMap暂不支持File文件入参
+    public static String execute(String url, String params, String method,
+            String contentType, Map<String, String> formDataMap) {
         String content = null;
         HttpURLConnection conn = null;
         try {
@@ -44,22 +52,52 @@ public class HttpRequest {
             conn.setDoInput(true);
             conn.setDoOutput(true);
 
-            // 此方法在正式链接之前设置才有效。
             conn.setRequestMethod(method);
             conn.setUseCaches(false);
 
-            if (contentType != null && !contentType.trim().isEmpty()) {
-                //  "application/soap+xml; charset=utf-8"
-                conn.setRequestProperty("Content-Type", contentType.trim());
+            var isFormData = false;
+            String boundary = null;    //  --uuid
+            if (contentType != null && !contentType.isBlank()) {
+                var ct = contentType.trim();
+                //  "application/x-www-form-urlencoded"
+                //  multipart/form-data; boundary=--uuid
+                conn.setRequestProperty("Content-Type", ct);
+                if (ct.startsWith("multipart/form-data")) {
+                    var key = "boundary=";
+                    boundary = ct.substring(ct.indexOf(key) + key.length());
+                    if (boundary == null || boundary.isBlank()) {
+                        boundary = UUID.randomUUID().toString();
+                    }
+                    isFormData = true;
+                }
             }
-
-            // 正式创建链接
-            conn.connect();
-
+            System.out.println("boundary: " + boundary);
             if (params != null) {
-                try ( DataOutputStream dos = new DataOutputStream(conn.getOutputStream())) {
-                    dos.write(params.getBytes());
-                    dos.flush();
+                if (isFormData) {
+                    StringBuilder sb = new StringBuilder();
+                    if (formDataMap != null && !formDataMap.isEmpty()) {
+                        for (var entry : formDataMap.entrySet()) {
+                            System.out.println("key = " + entry.getKey() + ", value = " + entry.getValue());
+                            //  必须比boundary定义时前部多出两个横线，否则报：Missing initial multi part boundary
+                            sb.append("--").append(boundary).append("\r\n");
+                            sb.append("Content-Disposition: form-data; name=\"")
+                                    .append(entry.getKey()).append("\"\r\n\r\n");
+                            sb.append(entry.getValue()).append("\r\n");
+                        }
+                    }
+
+                    //  结束标记
+                    sb.append("--").append(boundary).append("--\r\n");
+                    try ( DataOutputStream dos = new DataOutputStream(conn.getOutputStream())) {
+                        dos.write(sb.toString().getBytes("UTF-8")); // Java18+内置UTF-8后就不用设置编码了
+                        dos.flush();
+                    }
+                    System.out.println(sb.toString());
+                } else {
+                    try ( DataOutputStream dos = new DataOutputStream(conn.getOutputStream())) {
+                        dos.writeBytes(params);
+                        dos.flush();
+                    }
                 }
             }
 
@@ -171,7 +209,6 @@ public class HttpRequest {
 //        }
 //
 //    }
-
     // String cd = request.getPart("x").getHeader("Content-Disposition");
     public static String getFileName(String cd) {
         String fileName = null;

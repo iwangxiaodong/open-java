@@ -1,7 +1,6 @@
 plugins {
     id 'java-library'
     id("maven-publish")
-    id "com.google.cloud.artifactregistry.gradle-plugin" version "2.1.5"
 
     //    id 'signing'
 }
@@ -19,9 +18,11 @@ sourceSets {
         }
     }
 }
+
 compileJavaSecondJava {
     options.release = 12
 }
+
 jar {
     manifest {
         attributes("Multi-Release": true)
@@ -41,46 +42,47 @@ dependencies {
     javaSecondImplementation files(sourceSets.main.output.classesDirs) { builtBy compileJava }
 
     //  测试api
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'    
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'    
     //  测试引擎
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
 }
 
 java {
     withJavadocJar()
     withSourcesJar()
 }
+
+javadoc {
+    options.encoding = 'UTF-8'
+}
+
+//apply plugin: "java" // gradle内置了该plugin，无需写入plugins块儿。
+//apply plugin: "maven-publish" // 同上。
 publishing {
     repositories {
         maven {
-            url "artifactregistry://asia-maven.pkg.dev/project-161922/maven-public-snapshot"
-            credentials {
-                username = "_json_key"  //  key.json内容直转为base64后用_json_key_base64
+            url "https://asia-northeast1-maven.pkg.dev/project-161922/maven-public-snapshot/"
+            credentials { // 若配了credentials.username则可去掉artifactregistry插件，将协议改为“https://...”即可。
+                //  编码key.json内容为base64后username改用_json_key_base64
+                username = "_json_key"
                 password = file('../../project-161922-8ad030ce3d3e.json').text
             }
-            authentication {
-                basic(BasicAuthentication)
+            authentication { basic(BasicAuthentication) }
+        }
+    }
+    publications { mainRelease(MavenPublication) { from(components.java) } }
+}
+
+afterEvaluate { project ->
+    project.tasks.all { Task task ->
+        if (task.name ==~ /publish.*PublicationToMavenRepository/) {
+            task.doFirst {
+                println "Set task's network proxy"
+                System.setProperty("http.proxyHost", "127.0.0.1")
+                System.setProperty("http.proxyPort", "10800")
+                System.setProperty("https.proxyHost", "127.0.0.1")
+                System.setProperty("https.proxyPort", "10800")
             }
         }
-        /*
-        maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/iwangxiaodong/open-java")
-        credentials {
-        username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-        password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
-        }
-        }*/
     }
-    publications {
-        mainRelease(MavenPublication) {
-            from(components.java)
-            //groupId = group
-            //artifactId = name
-            //version = version
-        }
-    }
-}
-javadoc {
-    options.encoding = 'UTF-8'
 }
