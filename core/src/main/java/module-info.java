@@ -10,4 +10,5 @@ module com.openle.our.core {
     exports com.openle.our.core.security;
     exports com.openle.our.core.specification;
     exports com.openle.our.core.tuple;
+    exports com.openle.our.core.media;
 }

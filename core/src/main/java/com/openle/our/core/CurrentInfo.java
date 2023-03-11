@@ -1,5 +1,7 @@
 package com.openle.our.core;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.nio.charset.Charset;
 import java.time.OffsetDateTime;
 import java.util.Locale;
@@ -22,7 +24,19 @@ public class CurrentInfo {
         System.out.println("Default locale - " + Locale.getDefault());
 
         System.out.println("Current directory - " + System.getProperty("user.dir"));
-        System.out.println("Java version - " + Runtime.version().toString());
+
+        //  Android编译时报Missing class java.lang.Runtime$Version
+        //  System.out.println("Java version - " + Runtime.version().toString());
+        try {
+            var v = Class.forName("java.lang.Runtime$Version");
+            var rv = MethodHandles.lookup().findStatic(Runtime.class, "version", MethodType.methodType(v));
+            System.out.println("Java version - " + rv.invoke().toString());
+        } catch (ReflectiveOperationException e) {
+            System.err.println(e);
+        } catch (Throwable ex) {
+            System.err.println(ex);
+        }
+
         System.out.println("Java home - " + System.getProperty("java.home"));
         System.out.println("Java total memory - " + Runtime.getRuntime().totalMemory());
         System.out.println("Java heap memory - " + Runtime.getRuntime().maxMemory());
