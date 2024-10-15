@@ -3,7 +3,6 @@ package tests;
 import com.openle.our.core.io.Serializer;
 import com.openle.our.core.network.NetCommon;
 import java.io.IOException;
-import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
@@ -27,7 +26,6 @@ public class OtherTest {
 //        Tuple3 newT3 = (Tuple3) new Serializer().load(bytes);
 //        Assertions.assertEquals(t3.v2, newT3.v2);
 //    }
-
     @Test
     public void testNetCommon() throws SocketException, UnknownHostException {
         NetCommon.getNetworkInterfacesWithMAC().forEach(i -> {
@@ -42,11 +40,7 @@ public class OtherTest {
         });
         System.out.println("testNetCommon ");
 
-        NetworkInterface ni = NetCommon.getEthernetNetworkInterface();
-        if (ni != null) {
-            System.out.println(ni.getName());
-            System.out.println(NetCommon.getIP(ni));
-        }
+        System.out.println(NetCommon.firstLocalAddress());
 
         //        try {
         //

@@ -5,7 +5,7 @@
  */
 package com.openle.our.core;
 
-import com.openle.our.core.network.HttpRequest;
+import com.openle.our.core.network.RequestCommon;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ public class NewClass {
     @Test
     public void temp() {
         var b = "test";// UUID.randomUUID().toString();
-        var r = HttpRequest.execute("https://staticfiles.openle.com/.well-known/app/other/api/report-push-info", "", "POST",
+        var r = RequestCommon.execute("https://staticfiles.openle.com/.well-known/app/other/api/report-push-info", "", "POST",
                 "multipart/form-data; boundary=WebKitFormBoundary7TMYhSONfkAM2z3a", Map.of(
                         "appId", "v",
                         "deviceId", "v2",

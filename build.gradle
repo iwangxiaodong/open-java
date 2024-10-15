@@ -8,4 +8,21 @@ subprojects {
     repositories {
         mavenCentral()
     }
+    
+    apply plugin: "java" // gradle内置了该plugin，无需写入plugins块儿。
+    apply plugin: "maven-publish" // 同上。
+    publishing {
+        repositories {
+            maven { // 解决withJavadocJar()上传超时：systemProp.org.gradle.internal.http.socketTimeout=300000
+                url "https://asia-northeast1-maven.pkg.dev/project-161922/maven-public-snapshot/"
+                credentials { // 重点：若配置了credentials.username则可去掉插件，将协议改为“https://...”即可。
+                    //  编码key.json内容为base64后username改用_json_key_base64
+                    username = "_json_key"
+                    password = file('../../../../docs/cloud/project-161922-8ad030ce3d3e.json').text
+                }
+                authentication { basic(BasicAuthentication) }
+            }
+        }
+        publications { mainRelease(MavenPublication) { from(components.java) } }
+    }
 }

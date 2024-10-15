@@ -1,3 +1,4 @@
+//  gradle publishMainReleasePublicationToMavenRepository
 plugins {
     id 'java-library'
     id("maven-publish")
@@ -5,10 +6,10 @@ plugins {
     //    id 'signing'
 }
 
-// Android编译器只支持到JDK11
+// Android编译器只支持到JDK17
 compileJava {
     //  会覆盖sourceCompatibility
-    options.release = 11
+    options.release = 17
 }
 
 sourceSets {
@@ -20,7 +21,7 @@ sourceSets {
 }
 
 compileJavaSecondJava {
-    options.release = 12
+    options.release = 18    //  UTF-8、jwebserver
 }
 
 jar {
@@ -29,7 +30,7 @@ jar {
         attributes("Implementation-Title": "Open-Java",
                    "Implementation-Version": archiveVersion)
     }
-    into('META-INF/versions/12') {
+    into('META-INF/versions/18') {
         from sourceSets.javaSecond.output
     }
 }
@@ -42,9 +43,9 @@ dependencies {
     javaSecondImplementation files(sourceSets.main.output.classesDirs) { builtBy compileJava }
 
     //  测试api
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'    
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'    
     //  测试引擎
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
 }
 
 java {
@@ -54,34 +55,20 @@ java {
 
 javadoc {
     options.encoding = 'UTF-8'
-}
-
-//apply plugin: "java" // gradle内置了该plugin，无需写入plugins块儿。
-//apply plugin: "maven-publish" // 同上。
-publishing {
-    repositories {
-        maven {
-            url "https://asia-northeast1-maven.pkg.dev/project-161922/maven-public-snapshot/"
-            credentials { // 若配了credentials.username则可去掉artifactregistry插件，将协议改为“https://...”即可。
-                //  编码key.json内容为base64后username改用_json_key_base64
-                username = "_json_key"
-                password = file('../../project-161922-8ad030ce3d3e.json').text
-            }
-            authentication { basic(BasicAuthentication) }
-        }
-    }
-    publications { mainRelease(MavenPublication) { from(components.java) } }
+    options.addBooleanOption('html5', true)
 }
 
 afterEvaluate { project ->
     project.tasks.all { Task task ->
         if (task.name ==~ /publish.*PublicationToMavenRepository/) {
             task.doFirst {
+                /*
                 println "Set task's network proxy"
                 System.setProperty("http.proxyHost", "127.0.0.1")
                 System.setProperty("http.proxyPort", "10800")
                 System.setProperty("https.proxyHost", "127.0.0.1")
                 System.setProperty("https.proxyPort", "10800")
+                 */
             }
         }
     }

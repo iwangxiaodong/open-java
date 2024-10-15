@@ -23,7 +23,9 @@ public class ZipClass {
         } catch (NoSuchFieldException | SecurityException ex) {
             System.err.println(ex);
         }
-        field.setAccessible(true);
+        if (!OS.isWindows()) { // InaccessibleObjectException: Unable to make field int java.util.zip.ZipEntry.extraAttributes accessible: module java.base does not "opens java.util.zip" to unnamed module
+            field.setAccessible(true);
+        }
     }
 
     // 注意 - 不会读取ZIP文件内权限信息，若有需要可换用unZip(...)或Apache Commons Compress
@@ -32,7 +34,7 @@ public class ZipClass {
     }
 
     //  Linux下会读取文件权限信息
-    //  java --add-opens java.base/java.util.zip=ALL-UNNAMED -jar app.jarls 
+    //  linux下需要加java.util.zip参数：java --add-opens java.base/java.util.zip=ALL-UNNAMED -jar app.jar
     public static void unZip(File zipFile, File destDir, boolean restorePermissions) throws IOException {
         if (!zipFile.exists()) {
             return;
@@ -61,7 +63,7 @@ public class ZipClass {
                 }
                 //  文件项读写
                 //  todo - 后续考虑用上 checkTargetPathForUnZip(tf,ze) 安全方式;
-                try ( var is = zf.getInputStream(ze);  var os = new FileOutputStream(tf)) {
+                try (var is = zf.getInputStream(ze); var os = new FileOutputStream(tf)) {
                     is.transferTo(os);
                 } catch (IOException ex) {
                     System.err.println(ex);
@@ -96,8 +98,8 @@ public class ZipClass {
     }
 
     public static void ZipCompress(String inputFileOrDir, String zipOutputFile) throws Exception {
-        try ( ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipOutputFile));//
-                  BufferedOutputStream bos = new BufferedOutputStream(out)) {
+        try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipOutputFile));//
+                 BufferedOutputStream bos = new BufferedOutputStream(out)) {
             compress(out, bos, new File(inputFileOrDir), null);
         }
     }
@@ -128,8 +130,8 @@ public class ZipClass {
             }
         } else { //如果不是目录（文件夹），即为文件，则先写入目录进入点，之后将文件写入zip文件中
             out.putNextEntry(new ZipEntry(entryPath));
-            try ( FileInputStream fos = new FileInputStream(input);//
-                      BufferedInputStream bis = new BufferedInputStream(fos)) {
+            try (FileInputStream fos = new FileInputStream(input);//
+                     BufferedInputStream bis = new BufferedInputStream(fos)) {
                 bis.transferTo(bos);
             }
             //  todo - 是否需要反射赋值当前文件权限至 ZipEntry.extraAttributes

@@ -10,12 +10,12 @@ import java.net.URL;
 import java.util.Map;
 import java.util.UUID;
 
-//   todo - post + form-data 暂只有execute(...)才能使用。
 /*
-    HttpRequest.execute("https://example.com", "", "POST",
+    RequestCommon.execute("https://example.com", "", "POST",
         "multipart/form-data; boundary=any-string", Map.of("k", "v"));
  */
-public class HttpRequest {
+@Deprecated // Android不支持Java11的java.net.http.HttpClient类，故保留专用 或 Cronet 库。
+public class RequestCommon {
 
     public static String get(String url) {
         return get(url, null);
@@ -86,15 +86,15 @@ public class HttpRequest {
                         }
                     }
 
-                    //  结束标记
+                    //  结束标记 - 未提供formDataMap也要处理结束吗？
                     sb.append("--").append(boundary).append("--\r\n");
-                    try ( DataOutputStream dos = new DataOutputStream(conn.getOutputStream())) {
+                    try (DataOutputStream dos = new DataOutputStream(conn.getOutputStream())) {
                         dos.write(sb.toString().getBytes("UTF-8")); // Java18+内置UTF-8后就不用设置编码了
                         dos.flush();
                     }
                     System.out.println(sb.toString());
                 } else {
-                    try ( DataOutputStream dos = new DataOutputStream(conn.getOutputStream())) {
+                    try (DataOutputStream dos = new DataOutputStream(conn.getOutputStream())) {
                         dos.writeBytes(params);
                         dos.flush();
                     }

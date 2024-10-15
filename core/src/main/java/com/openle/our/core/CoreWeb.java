@@ -67,31 +67,38 @@ public class CoreWeb {
     //  去除html标签
     //  或 Jsoup.parse(htmlString).text();
     public static String stripHTML(String str) {
-        try {
-            Class<?> clazz = Class.forName("javax.swing.text.html.HTMLDocument");
-            Constructor c = clazz.getConstructor();
-            Object doc = c.newInstance();
 
-            Class<?> editorClass = Class.forName("javax.swing.text.html.HTMLEditorKit");
-            Constructor c1 = editorClass.getConstructor();
-            Object editor = c1.newInstance();
+        if (str != null) {
+            try {
+                Class<?> clazz = Class.forName("javax.swing.text.html.HTMLDocument");
+                Constructor c = clazz.getConstructor();
+                Object doc = c.newInstance();
 
-            Method m = editorClass.getDeclaredMethod("read", StringReader.class.getSuperclass(),
-                    clazz.getSuperclass().getSuperclass().getInterfaces()[0], int.class);
-            m.invoke(editor, new StringReader(str), doc, 0);
+                Class<?> editorClass = Class.forName("javax.swing.text.html.HTMLEditorKit");
+                Constructor c1 = editorClass.getConstructor();
+                Object editor = c1.newInstance();
 
-            Method getLength = clazz.getSuperclass().getSuperclass()
-                    .getDeclaredMethod("getLength");
-            int length = (int) getLength.invoke(doc);
+                Method m = editorClass.getDeclaredMethod("read", StringReader.class.getSuperclass(),
+                        clazz.getSuperclass().getSuperclass().getInterfaces()[0], int.class);
+                m.invoke(editor, new StringReader(str), doc, 0);
 
-            Method getText = clazz.getSuperclass().getSuperclass()
-                    .getDeclaredMethod("getText", int.class, int.class);
-            String r = (String) getText.invoke(doc, 0, length);
-            return r;
-        } catch (ReflectiveOperationException e) {
-            System.err.println(e);
+                Method getLength = clazz.getSuperclass().getSuperclass()
+                        .getDeclaredMethod("getLength");
+                int length = (int) getLength.invoke(doc);
+
+                Method getText = clazz.getSuperclass().getSuperclass()
+                        .getDeclaredMethod("getText", int.class, int.class);
+                String r = (String) getText.invoke(doc, 0, length);
+
+                //  去除换行、转移字符、连续空格等
+                r = r.replaceAll("\\r", " ").replaceAll("\\n", " ")
+                        .replaceAll("&nbsp;", " ").replaceAll(" +", " ").strip();
+
+                return r;
+            } catch (ReflectiveOperationException e) {
+                System.err.println(e);
+            }
         }
-
 //        //  原始实现：
 //        HTMLDocument doc = new HTMLDocument();
 //        try {

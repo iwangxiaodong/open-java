@@ -11,11 +11,20 @@ public class OS {
 
     public static boolean isWindows() {
         String os = System.getProperty("os.name");
-        System.out.println("os.name:" + os);
+        System.out.println(os);
         if (os != null) {
-            return os.toLowerCase().startsWith("windows");
+            return os.toLowerCase().contains("windows");
         }
         return false;
+    }
+
+    //  os.name属性为linux，故改为ClassNotFoundException方式。
+    public static boolean isAndroid() {
+        try {
+            return Class.forName("android.os.Build") != null;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     //  setenv("OUR_ENVIRONMENT", "development-jta");

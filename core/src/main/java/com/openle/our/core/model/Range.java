@@ -1,4 +1,4 @@
-package com.openle.our.core;
+package com.openle.our.core.model;
 
 import java.io.Serializable;
 
